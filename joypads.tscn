@@ -1,0 +1,403 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://joypads.gd" type="Script" id=1]
+[ext_resource path="res://joypad_diagram.tscn" type="PackedScene" id=2]
+
+[node name="joypads" type="Control"]
+margin_left = 240.504
+margin_top = 22.6786
+margin_right = 240.504
+margin_bottom = 22.6786
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="JoypadDiagram" parent="." instance=ExtResource( 2 )]
+position = Vector2( -116.497, 56.1117 )
+scale = Vector2( 0.5, 0.5 )
+
+[node name="JoypadDiagramMapped" parent="." instance=ExtResource( 2 )]
+position = Vector2( 664.19, 58.6357 )
+scale = Vector2( 0.5, 0.5 )
+
+[node name="Axes" type="VBoxContainer" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Axes"]
+margin_right = 260.0
+margin_bottom = 14.0
+text = "input"
+align = 1
+valign = 1
+
+[node name="Axis0" type="HBoxContainer" parent="Axes"]
+margin_top = 18.0
+margin_right = 260.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Axes/Axis0"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis X"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis0"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="Axes/Axis0/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.18921
+margin_right = 1.18921
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Axis1" type="HBoxContainer" parent="Axes"]
+margin_top = 42.0
+margin_right = 260.0
+margin_bottom = 62.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Axes/Axis1"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis Y"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis1"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="Axes/Axis1/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Axis2" type="HBoxContainer" parent="Axes"]
+margin_top = 66.0
+margin_right = 260.0
+margin_bottom = 86.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Axes/Axis2"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis X"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis2"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="Axes/Axis2/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Axis3" type="HBoxContainer" parent="Axes"]
+margin_top = 90.0
+margin_right = 260.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Axes/Axis3"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis Y"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis3"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="Axes/Axis3/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AxesMapped" type="VBoxContainer" parent="."]
+margin_left = 276.0
+margin_right = 536.0
+margin_bottom = 92.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="AxesMapped"]
+margin_right = 260.0
+margin_bottom = 14.0
+text = "mapped"
+align = 1
+valign = 1
+
+[node name="Axis0" type="HBoxContainer" parent="AxesMapped"]
+margin_top = 18.0
+margin_right = 260.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="AxesMapped/Axis0"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis X"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis0"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="AxesMapped/Axis0/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Axis1" type="HBoxContainer" parent="AxesMapped"]
+margin_top = 42.0
+margin_right = 260.0
+margin_bottom = 62.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="AxesMapped/Axis1"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis Y"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis1"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="AxesMapped/Axis1/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Axis2" type="HBoxContainer" parent="AxesMapped"]
+margin_top = 66.0
+margin_right = 260.0
+margin_bottom = 86.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="AxesMapped/Axis2"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis X"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis2"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="AxesMapped/Axis2/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Axis3" type="HBoxContainer" parent="AxesMapped"]
+margin_top = 90.0
+margin_right = 260.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 260, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="AxesMapped/Axis3"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_vertical = 1
+text = "Axis Y"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis3"]
+margin_left = 54.0
+margin_right = 260.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -100.0
+step = 0.0001
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="AxesMapped/Axis3/ProgressBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 1
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
