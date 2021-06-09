@@ -85,9 +85,9 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor():
 			_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
 
-	# set max speed
-	_velocity.x = sign(_velocity.x) * min(abs(_velocity.x), MAX_SPEED.x)
-	_velocity.y = sign(_velocity.y) * min(abs(_velocity.y), MAX_SPEED.y)
+	# clamp to max speed
+	_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
+	_velocity.y = clamp(_velocity.y, -MAX_SPEED.y, MAX_SPEED.y)
 
 	print("final velocity: ", _velocity)
 	_velocity = move_and_slide(_velocity, Vector2.UP)

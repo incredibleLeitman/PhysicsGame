@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 	_velocity.y += Constants.GRAVITY * _mass * delta
 	
 	# set max speed
-	_velocity.x = sign(_velocity.x) * min(abs(_velocity.x), MAX_SPEED.x)
-	_velocity.y = sign(_velocity.y) * min(abs(_velocity.y), MAX_SPEED.y)
+	_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
+	_velocity.y = clamp(_velocity.y, -MAX_SPEED.y, MAX_SPEED.y)
 
 	_velocity = move_and_slide(_velocity, Vector2.UP)
