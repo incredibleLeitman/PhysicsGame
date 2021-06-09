@@ -3,37 +3,43 @@
 [ext_resource path="res://Player/Input/joypad_diagram.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Player/Input/Joypads.gd" type="Script" id=2]
 
-[node name="Joypads" type="Control"]
-margin_left = 240.504
-margin_top = 22.6786
-margin_right = 240.504
-margin_bottom = 22.6786
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Joypads" type="Control" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_right = 0.5
+rect_scale = Vector2( 1.5, 1.5 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="JoypadDiagram" parent="." instance=ExtResource( 1 )]
-position = Vector2( -116.497, 56.1117 )
+[node name="JoypadDiagram" parent="Joypads" instance=ExtResource( 1 )]
+position = Vector2( -399.848, 86.2723 )
 scale = Vector2( 0.5, 0.5 )
 
-[node name="JoypadDiagramMapped" parent="." instance=ExtResource( 1 )]
-position = Vector2( 664.19, 58.6357 )
+[node name="JoypadDiagramMapped" parent="Joypads" instance=ExtResource( 1 )]
+position = Vector2( 396.713, 88.7963 )
 scale = Vector2( 0.5, 0.5 )
 
-[node name="Axes" type="VBoxContainer" parent="."]
+[node name="Axes" type="VBoxContainer" parent="Joypads"]
+margin_left = -267.477
+margin_top = 30.1606
+margin_right = -7.47711
+margin_bottom = 140.161
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Axes"]
+[node name="Label" type="Label" parent="Joypads/Axes"]
 margin_right = 260.0
 margin_bottom = 14.0
 text = "input"
 align = 1
 valign = 1
 
-[node name="Axis0" type="HBoxContainer" parent="Axes"]
+[node name="Axis0" type="HBoxContainer" parent="Joypads/Axes"]
 margin_top = 18.0
 margin_right = 260.0
 margin_bottom = 38.0
@@ -42,19 +48,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Axes/Axis0"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/Axes/Axis0"]
+margin_right = 57.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis X"
+text = "LS Axis X"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis0"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/Axes/Axis0"]
+margin_left = 61.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -66,7 +72,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="Axes/Axis0/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/Axes/Axis0/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 1.18921
@@ -79,7 +85,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Axis1" type="HBoxContainer" parent="Axes"]
+[node name="Axis1" type="HBoxContainer" parent="Joypads/Axes"]
 margin_top = 42.0
 margin_right = 260.0
 margin_bottom = 62.0
@@ -88,19 +94,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Axes/Axis1"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/Axes/Axis1"]
+margin_right = 56.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis Y"
+text = "LS Axis Y"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis1"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/Axes/Axis1"]
+margin_left = 60.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -112,7 +118,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="Axes/Axis1/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/Axes/Axis1/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
@@ -123,7 +129,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Axis2" type="HBoxContainer" parent="Axes"]
+[node name="Axis2" type="HBoxContainer" parent="Joypads/Axes"]
 margin_top = 66.0
 margin_right = 260.0
 margin_bottom = 86.0
@@ -132,19 +138,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Axes/Axis2"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/Axes/Axis2"]
+margin_right = 58.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis X"
+text = "RS Axis X"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis2"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/Axes/Axis2"]
+margin_left = 62.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -156,7 +162,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="Axes/Axis2/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/Axes/Axis2/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
@@ -167,7 +173,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Axis3" type="HBoxContainer" parent="Axes"]
+[node name="Axis3" type="HBoxContainer" parent="Joypads/Axes"]
 margin_top = 90.0
 margin_right = 260.0
 margin_bottom = 110.0
@@ -176,19 +182,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Axes/Axis3"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/Axes/Axis3"]
+margin_right = 57.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis Y"
+text = "RS Axis Y"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="Axes/Axis3"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/Axes/Axis3"]
+margin_left = 61.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -200,7 +206,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="Axes/Axis3/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/Axes/Axis3/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
@@ -211,22 +217,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AxesMapped" type="VBoxContainer" parent="."]
-margin_left = 276.0
-margin_right = 536.0
-margin_bottom = 92.0
+[node name="AxesMapped" type="VBoxContainer" parent="Joypads"]
+margin_left = 8.52292
+margin_top = 30.1606
+margin_right = 268.523
+margin_bottom = 140.161
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="AxesMapped"]
+[node name="Label" type="Label" parent="Joypads/AxesMapped"]
 margin_right = 260.0
 margin_bottom = 14.0
 text = "mapped"
 align = 1
 valign = 1
 
-[node name="Axis0" type="HBoxContainer" parent="AxesMapped"]
+[node name="Axis0" type="HBoxContainer" parent="Joypads/AxesMapped"]
 margin_top = 18.0
 margin_right = 260.0
 margin_bottom = 38.0
@@ -235,19 +242,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="AxesMapped/Axis0"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/AxesMapped/Axis0"]
+margin_right = 57.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis X"
+text = "LS Axis X"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis0"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/AxesMapped/Axis0"]
+margin_left = 61.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -259,7 +266,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="AxesMapped/Axis0/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/AxesMapped/Axis0/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
@@ -270,7 +277,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Axis1" type="HBoxContainer" parent="AxesMapped"]
+[node name="Axis1" type="HBoxContainer" parent="Joypads/AxesMapped"]
 margin_top = 42.0
 margin_right = 260.0
 margin_bottom = 62.0
@@ -279,19 +286,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="AxesMapped/Axis1"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/AxesMapped/Axis1"]
+margin_right = 56.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis Y"
+text = "LS Axis Y"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis1"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/AxesMapped/Axis1"]
+margin_left = 60.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -303,7 +310,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="AxesMapped/Axis1/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/AxesMapped/Axis1/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
@@ -314,7 +321,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Axis2" type="HBoxContainer" parent="AxesMapped"]
+[node name="Axis2" type="HBoxContainer" parent="Joypads/AxesMapped"]
 margin_top = 66.0
 margin_right = 260.0
 margin_bottom = 86.0
@@ -323,19 +330,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="AxesMapped/Axis2"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/AxesMapped/Axis2"]
+margin_right = 58.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis X"
+text = "RS Axis X"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis2"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/AxesMapped/Axis2"]
+margin_left = 62.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -347,7 +354,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="AxesMapped/Axis2/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/AxesMapped/Axis2/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
@@ -358,7 +365,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Axis3" type="HBoxContainer" parent="AxesMapped"]
+[node name="Axis3" type="HBoxContainer" parent="Joypads/AxesMapped"]
 margin_top = 90.0
 margin_right = 260.0
 margin_bottom = 110.0
@@ -367,19 +374,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="AxesMapped/Axis3"]
-margin_right = 50.0
+[node name="Label" type="Label" parent="Joypads/AxesMapped/Axis3"]
+margin_right = 57.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_vertical = 1
-text = "Axis Y"
+text = "RS Axis Y"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProgressBar" type="ProgressBar" parent="AxesMapped/Axis3"]
-margin_left = 54.0
+[node name="ProgressBar" type="ProgressBar" parent="Joypads/AxesMapped/Axis3"]
+margin_left = 61.0
 margin_right = 260.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -391,7 +398,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Value" type="Label" parent="AxesMapped/Axis3/ProgressBar"]
+[node name="Value" type="Label" parent="Joypads/AxesMapped/Axis3/ProgressBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_vertical = 1
