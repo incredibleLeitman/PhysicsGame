@@ -102,6 +102,8 @@ Player can also be moved with a controller
 
 - [official Godot Demo projects](https://godotengine.github.io/godot-demo-projects)
 
+- [moving platforms with animation player](https://kidscancode.org/godot_recipes/2d/moving_platforms/)
+
 - https://godotengine.org/article/handling-axis-godot
 
 - https://www.reddit.com/r/godot/comments/bkbttb/how_to_access_the_deadzone_value_set_in_the_input/
