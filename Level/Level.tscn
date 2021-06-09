@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Resources/Tileset.tres" type="TileSet" id=2]
+[ext_resource path="res://Resources/moving_platform.png" type="Texture" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 46.2754, 14.7448 )
+
+[node name="Level" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 32, 32 )
+cell_quadrant_size = 4
+format = 1
+tile_data = PoolIntArray( 393220, 11, 0, 524291, 11, 0, 524292, 11, 0, 524293, 11, 0, 524309, 11, 0, 589829, 11, 0, 589830, 11, 0, 589831, 11, 0 )
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2( 209.425, 152.028 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2( -0.0258484, -0.694427 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="RigidBody2D"]
+texture = ExtResource( 4 )

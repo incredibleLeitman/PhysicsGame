@@ -1,23 +1,23 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://joypads.gd" type="Script" id=1]
-[ext_resource path="res://joypad_diagram.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Player/Input/joypad_diagram.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Player/Input/Joypads.gd" type="Script" id=2]
 
-[node name="joypads" type="Control"]
+[node name="Joypads" type="Control"]
 margin_left = 240.504
 margin_top = 22.6786
 margin_right = 240.504
 margin_bottom = 22.6786
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="JoypadDiagram" parent="." instance=ExtResource( 2 )]
+[node name="JoypadDiagram" parent="." instance=ExtResource( 1 )]
 position = Vector2( -116.497, 56.1117 )
 scale = Vector2( 0.5, 0.5 )
 
-[node name="JoypadDiagramMapped" parent="." instance=ExtResource( 2 )]
+[node name="JoypadDiagramMapped" parent="." instance=ExtResource( 1 )]
 position = Vector2( 664.19, 58.6357 )
 scale = Vector2( 0.5, 0.5 )
 
