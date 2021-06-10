@@ -4,12 +4,17 @@ extends Pawn
 onready var InputHandler = $Joypads
 
 
+export var variant := 3
+
+
+var _debug := false
+
+
 func _physics_process(delta: float) -> void:
 
 	# speed is acceleration * delta
 	# velocity is dir * speed
 
-	var variant = 3
 	############	 	variant 1		 ############
 	#################################################
 	# use vec2 * vec2 to combine move and jump
@@ -23,11 +28,11 @@ func _physics_process(delta: float) -> void:
 		)
 
 		_velocity += dir * Constants.MOVE_ACCELERATION * Vector2(1, 50)
-		print("velocity: ", _velocity, " for dir: ", dir)
+		if _debug: print("velocity: ", _velocity, " for dir: ", dir)
 		
 		# apply forces like gravity
 		_velocity.y += Constants.GRAVITY * _mass * delta * 100
-		print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
+		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
 
 		# adapt to velocity from ground
 		if is_on_floor():
@@ -44,11 +49,11 @@ func _physics_process(delta: float) -> void:
 		)
 
 		_velocity += dir * Constants.MOVE_ACCELERATION.x
-		print("velocity: ", _velocity, " for dir: ", dir)
+		if _debug: print("velocity: ", _velocity, " for dir: ", dir)
 		
 		# apply forces like gravity
 		_velocity.y += Constants.GRAVITY * _mass * delta
-		print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
+		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
 
 		# adapt to velocity from ground
 		_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
@@ -72,14 +77,14 @@ func _physics_process(delta: float) -> void:
 			_speed = 0
 
 		_velocity += dir * _speed
-		print("velocity: ", _velocity, " for dir: ", dir, " and speed: ", _speed)
+		if _debug: print("velocity: ", _velocity, " for dir: ", dir, " and speed: ", _speed)
 
 		if Input.is_action_just_pressed("jump") and is_on_floor():
 			_velocity.y -= Constants.MOVE_ACCELERATION.y * 40
 
 		# apply forces like gravity
 		_velocity.y += Constants.GRAVITY * _mass * delta * 100
-		print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
+		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
 
 		# adapt to velocity from ground
 		if is_on_floor():
@@ -89,5 +94,5 @@ func _physics_process(delta: float) -> void:
 	_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
 	_velocity.y = clamp(_velocity.y, -MAX_SPEED.y, MAX_SPEED.y)
 
-	print("final velocity: ", _velocity)
+	if _debug: print("final velocity: ", _velocity)
 	_velocity = move_and_slide(_velocity, Vector2.UP)
