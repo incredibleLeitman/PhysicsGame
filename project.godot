@@ -12,12 +12,12 @@ _global_script_classes=[ {
 "base": "KinematicBody2D",
 "class": "Pawn",
 "language": "GDScript",
-"path": "res://Player/Pawn.gd"
+"path": "res://Pawn/Pawn.gd"
 }, {
-"base": "Reference",
+"base": "RigidBody2D",
 "class": "Player",
 "language": "GDScript",
-"path": "res://Player/RigidPlayer.gd"
+"path": "res://Pawn/Player/RigidPlayer.gd"
 } ]
 _global_script_class_icons={
 "Pawn": "",

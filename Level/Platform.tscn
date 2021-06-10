@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Resources/moving_platform.png" type="Texture" id=1]
+[ext_resource path="res://Level/Platform.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 48, 16 )
@@ -40,9 +41,9 @@ tracks/0/keys = {
 }
 
 [node name="Platform" type="Node2D"]
+script = ExtResource( 2 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
-position = Vector2( 0, 6.66746 )
 motion/sync_to_physics = true
 
 [node name="moving_platform" type="Sprite" parent="KinematicBody2D"]
