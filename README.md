@@ -3,27 +3,18 @@ Simple game prototype to show some physic game engine basics for @FHTechnikumWie
 
 ## Table of Contents
 
-  * [Topics TBD](#topics-tbd)
-  * [overview and description TBD](#overview-and-description-tbd)
-    + [Standard Group](#standard)
-    + [Toughie Group](#toughie)
-    + [Euler Group](#euler)
-  * [Controls](#controls)
-  * [Used assets](#used-assets)
-  * [Additional references and resources](#additional-references-and-resources)
-
-
 - [Topics](#topics)
 - [Overview and description](#overview)
-	- [Standard Group](#standard)
-    - [Toughie Group](#toughie)
-    - [Euler Group](#euler)
-- [Controls](#controls)
+	* [Standard Group](#standard-grp)
+	* [Toughie Group](#toughie-grp)
+	* [Euler Group](#euler-grp)
+- [Controls](#control-anchor)
 - [Assets](#assets)
 - [References and resources](#references)
 
 <a name="topics" />
-## topics TBD
+
+## Topics (TBD)
 
 Your grade will be based on a Unity project you make. This can be a game, or a simulation that
 implements and demonstrates your understanding of these topics:
@@ -64,11 +55,13 @@ C. Your mark from the Euler group (10 points
 
 
 <a name="overview" />
-## overview and description TBD
+
+## Overview and description (TBD)
 
 My project is a time travelling 2d platformer called Rad Boar Rewind. These are my topics:
 
-<a name="standard" />
+<a name="standard-grp" />
+
 ### Standard
 
 **- Normalisation and magnitude**
@@ -166,7 +159,8 @@ I would personally not choose this topic because this is an analytical way of do
 generally a simulation based one, and therefore it is rarely used in games. But since it’s on the
 syllabus, I will mark it if you try it.*
 
-<a name="toughie" />
+<a name="toughie-grp" />
+
 ### Toughie
 
 **- Hooke’s Lap/Damping**
@@ -221,7 +215,8 @@ I added a rope that you can swing on in Pendulum.cs. Not only does it swing with
 the length, but the rope itself is stretchy and oscillates when you jump on it, eventually reaching 0
 due to damping!
 
-<a name="euler" />
+<a name="euler-grp" />
+
 ### Euler
 
 **- Euler integration**
@@ -232,8 +227,9 @@ how it ties into calculus.*
 
 Companion.cs lerps your little companion towards you using its velocity
 
-<a name="controls" />
-## controls
+<a name="control-anchor" />
+
+## Controls
 
 | key        | action |
 | :------------- | :----- |
@@ -242,12 +238,14 @@ Companion.cs lerps your little companion towards you using its velocity
 Player can also be moved with a controller
 
 <a name="assets" />
-## used assets
+
+## Used assets
 
 - [starting assets from GDQuest](https://github.com/GDQuest/godot-beginner-2d-platformer/releases/tag/1.1.0)
 
 <a name="references" />
-## additional references and resources
+
+## Additional references and resources
 
 - [Hyperphysics](http://hyperphysics.phy-astr.gsu.edu/hbase/hframe.html)
 
