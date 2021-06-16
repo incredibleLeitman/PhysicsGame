@@ -3,9 +3,7 @@ extends Pawn
 
 onready var InputHandler = $Joypads
 
-
 export var variant := 3
-
 
 var _debug := false
 
@@ -31,7 +29,7 @@ func _physics_process(delta: float) -> void:
 		if _debug: print("velocity: ", _velocity, " for dir: ", dir)
 		
 		# apply forces like gravity
-		_velocity.y += Constants.GRAVITY * _mass * delta * 100
+		apply_gravity(delta)
 		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
 
 		# adapt to velocity from ground
@@ -52,7 +50,7 @@ func _physics_process(delta: float) -> void:
 		if _debug: print("velocity: ", _velocity, " for dir: ", dir)
 		
 		# apply forces like gravity
-		_velocity.y += Constants.GRAVITY * _mass * delta
+		apply_gravity(delta)
 		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
 
 		# adapt to velocity from ground
@@ -82,17 +80,17 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("jump") and is_on_floor():
 			_velocity.y -= Constants.MOVE_ACCELERATION.y * 40
 
-		# apply forces like gravity
-		_velocity.y += Constants.GRAVITY * _mass * delta * 100
-		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
-
 		# adapt to velocity from ground
 		if is_on_floor():
 			_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
+		else:
+			# only apply gravity in the air
+			apply_gravity(delta)
+			if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
 
 	# clamp to max speed
 	_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
-	_velocity.y = clamp(_velocity.y, -MAX_SPEED.y, MAX_SPEED.y)
 
 	if _debug: print("final velocity: ", _velocity)
-	_velocity = move_and_slide(_velocity, Vector2.UP)
+	#_velocity = move_and_slide(_velocity, Vector2.UP)
+	move_and_slide(_velocity, Vector2.UP)
