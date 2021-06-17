@@ -6,8 +6,8 @@ func _ready() -> void:
 
 
 func _on_Area2D_body_entered(body: Node) -> void:
-	print("on body entered: ", body.name)
+	print(name, " on body entered: ", body.name)
 
 
 func _on_Area2D_body_exited(body: Node) -> void:
-	print("on body exit: ", body.name)
+	print(name, " on body exit: ", body.name)
