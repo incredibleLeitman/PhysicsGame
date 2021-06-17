@@ -77,16 +77,19 @@ func _physics_process(delta: float) -> void:
 		_velocity += dir * _speed
 		if _debug: print("velocity: ", _velocity, " for dir: ", dir, " and speed: ", _speed)
 
-		if Input.is_action_just_pressed("jump") and is_on_floor():
-			_velocity.y -= Constants.MOVE_ACCELERATION.y * 40
-
-		# adapt to velocity from ground
-		if is_on_floor():
-			_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
-		else:
-			# only apply gravity in the air
+		# only apply gravity in the air
+		if not is_on_floor():
 			apply_gravity(delta)
 			if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * _mass * delta))
+		else:
+			if Input.is_action_just_pressed("jump"):
+				_velocity.y -= Constants.MOVE_ACCELERATION.y * 50
+			else:
+				_velocity.y = 0
+
+		# adapt to velocity from ground
+		_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
+		#_velocity.y = lerp(_velocity.y, ground_velocity.y, Constants.MOVE_DRAG * 0.1)
 
 	# clamp to max speed
 	_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)

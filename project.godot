@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Pawn",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://Pawn/Enemy/Enemy.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Pawn",
 "language": "GDScript",
@@ -20,6 +25,7 @@ _global_script_classes=[ {
 "path": "res://Pawn/Player/RigidPlayer.gd"
 } ]
 _global_script_class_icons={
+"Enemy": "",
 "Pawn": "",
 "Player": ""
 }

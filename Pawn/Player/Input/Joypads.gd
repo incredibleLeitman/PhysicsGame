@@ -13,8 +13,6 @@ func _unhandled_input(event):
 		if event.pressed and event.scancode == KEY_K:
 			self.visible = !self.visible
 
-
-#func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	# Loop through the axes and show their current values
 	for axis in range(4):
@@ -44,3 +42,9 @@ func _physics_process(_delta: float) -> void:
 			if axis <= JOY_ANALOG_RY:
 				joypad_axes_mapped.get_node(str(axis) + "+").visible = axis_value > 0
 				joypad_axes_mapped.get_node(str(axis) + "-").visible = axis_value < 0
+
+func getAxis():
+	pass
+
+func getJump():
+	pass

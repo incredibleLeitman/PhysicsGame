@@ -1,5 +1,4 @@
-#extends "res://Player/Pawn.gd"
-extends Pawn
+extends KinematicBody2D
 
 export(NodePath) var player_node
 onready var player = get_node(player_node)
