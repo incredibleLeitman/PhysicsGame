@@ -2,7 +2,9 @@ extends KinematicBody2D
 class_name Pawn
 
 
-var _mass := 1.0
+export var cor := 0.5 # coefficient of restitution (bounciness)
+export var mass := 1.0
+
 var _speed := 0.0
 var _velocity := Vector2.ZERO
 var _is_in_rest := false
@@ -13,19 +15,24 @@ var collision_handled := false # flag to indicate that another object already ha
 
 export var MAX_SPEED := Vector2(500, 2000)
 
+func _physics_process(delta: float) -> void:
+	# this should stop the object from moving, which should stop colliding, which should stop endlessly adding gravity
+	# should actually happen if drag is working correctly
+	stop_at_rest()
 
 func apply_gravity(delta: float) -> void:
-	_velocity.y += Constants.GRAVITY * _mass * delta
+	_velocity.y += Constants.GRAVITY * mass * delta
 
 func add_force(force: Vector2) -> void:
 	_velocity = force
 
-func bounce(m1: float, m2: float, v1: Vector2, v2: Vector2, cor: float) -> void:
-	var bounce_velocity = (m1*v1 + m2*v2 + m2*cor*(v2 - v1)) / (m1+m2)
-	# if collision with non-moving object
-	if v2.is_equal_approx(Vector2.ZERO):
-		bounce_velocity.x *= -1
-	add_force(bounce_velocity)
+# used to bounce away from an non-moving object
+func bounce(normal: Vector2) -> void:
+	_velocity = -(2.0 * normal * _velocity.dot(normal) - _velocity) * cor
+
+# used for two moving objects to bounce of each other
+func collide(m1: float, m2: float, v1: Vector2, v2: Vector2) -> void:
+	_velocity = (m1*v1 + m2*v2 + m2*cor*(v2 - v1)) / (m1+m2)
 
 func stop_at_rest():
 	if _velocity.length() < 12:
