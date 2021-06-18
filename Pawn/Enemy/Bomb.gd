@@ -4,7 +4,6 @@ extends Pawn
 export(Vector2) var initial_velocity := Vector2(2*MAX_SPEED.x, -500)
 export var max_lifetime := 7.0 # time before despawning in s ( = double the cannon shoot delay)
 var _alive := 0.0 # determine current lifetime
-export var cor := 0.5 # coefficient of restitution (bounciness)
 
 var _debug_out := false
 
@@ -48,8 +47,8 @@ func _physics_process(delta: float) -> void:
 
 				var pawn := collision.collider as Pawn
 
-				var m1 = _mass
-				var m2 = pawn._mass
+				var m1 = mass
+				var m2 = pawn.mass
 				var v1 = _velocity
 				var v2 = pawn._velocity
 
@@ -57,29 +56,24 @@ func _physics_process(delta: float) -> void:
 				# could also store values before collision and aply after next tick
 				# to that the collider use the same values before modifications
 				if _debug_out: print(pawn.name, " vel before bounce: ", v2, " length: ", v2.length())
-				pawn.bounce(m2, m1, v2, v1, cor)
+				pawn.collide(m2, m1, v2, v1)
+				pawn.collision_handled = true # mark as handled so that the object itself does not bounce
 				if _debug_out: print(pawn.name, " vel after bounce: ", pawn._velocity, " length: ", pawn._velocity.length())
-				pawn.stop_at_rest()
-
-				# mark as handled so that the object itself does not bounce
-				pawn.collision_handled = true
 
 				# handle own bounce
 				if _debug_out: print(name, " vel before bounce: ", v1, " length: ", v1.length())
-				bounce(m1, m2, v1, v2, cor)
+				if v2.is_equal_approx(Vector2.ZERO):
+					bounce(collision.normal)
+				else:
+					collide(m1, m2, v1, v2)
 				if _debug_out: print(name, " vel after bounce: ", _velocity, " length: ", _velocity.length())
-				stop_at_rest()
 
 			else:
-				# use Godot integrated physics
 				if _debug_out: print(name, " vel before bounce: ", _velocity, " length: ", _velocity.length())
-				_velocity = _velocity.bounce(collision.normal) * 0.5
 				#var remaining_vel = collision.remainder
 				#_velocity = remaining_vel.bounce(collision.normal)
+				bounce(collision.normal)
 				if _debug_out: print(name, " vel after bounce: ", _velocity, " length: ", _velocity.length())
-				# this should stop the object from moving, which should stop colliding, which should stop endlessly adding gravity
-				# should actually happen if drag is working correctly
-				stop_at_rest()
 
 	# destroy bullet after given lifetime
 	_alive += delta
