@@ -1,5 +1,6 @@
 extends Control
 
+# controls
 var _dir := Vector2.ZERO setget , get_move_dir
 var _jump := false setget , is_jumping
 
@@ -7,17 +8,29 @@ var _jump := false setget , is_jumping
 var axis_value := 0.0
 var str_value := ""
 
+var _pos_to := 0
+
 onready var axes = $Axes
 onready var axes_mapped = $AxesMapped
 onready var joypad_axes = $JoypadDiagram/Axes
 onready var joypad_axes_mapped = $JoypadDiagramMapped/Axes
 
+var POS_HIDDEN = -260
+
+
+func _ready() -> void:
+	rect_position.y = POS_HIDDEN
+	_pos_to = rect_position.y
+
 func _unhandled_input(event):
 	if event is InputEventKey:
 		if event.pressed and event.scancode == KEY_K:
-			self.visible = !self.visible
+			_pos_to = 0 if _pos_to != 0 else POS_HIDDEN
 
 func _physics_process(_delta: float) -> void:
+
+	if rect_position.y != _pos_to:
+		rect_position.y += ceil((_pos_to - rect_position.y) * 0.1)
 
 	_dir = Vector2.ZERO
 	

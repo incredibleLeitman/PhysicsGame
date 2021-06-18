@@ -2,11 +2,17 @@ extends Pawn
 
 
 onready var InputHandler = $InputHandler/Joypads
+onready var Alex = $Blob/Alex
 
-export var variant := 3
+export var mode_move := 3
 
 var _debug := false
 
+
+func _process(delta: float) -> void:
+
+	if abs(_velocity.x) > 0:
+		Alex.flip_h = sign(_velocity.x) >= 0
 
 func _physics_process(delta: float) -> void:
 
@@ -27,12 +33,12 @@ func _physics_process(delta: float) -> void:
 	
 	var jump = InputHandler.is_jumping()
 	
-	############	 	variant 1		 ############
+	############	 	mode_move 1		 ############
 	#################################################
 	# use vec2 * vec2 to combine move and jump
 	# 	- would always add jump -> add 0 in air
 	# 	- add modifier for move acceleration.y and gravity
-	if variant == 1:
+	if mode_move == 1:
 		
 		dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
@@ -50,10 +56,10 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor():
 			_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
 
-	############	 	variant 2		 ############
+	############	 	mode_move 2		 ############
 	#################################################
 	# its something, that doesn't feel shit :D
-	elif variant == 2:
+	elif mode_move == 2:
 		dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 			-Constants.MOVE_ACCELERATION.y if Input.is_action_just_pressed("jump") and is_on_floor() else 1.0
@@ -69,13 +75,13 @@ func _physics_process(delta: float) -> void:
 		# adapt to velocity from ground
 		_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
 	
-	############	 	variant 3		 ############
+	############	 	mode_move 3		 ############
 	#################################################
 	# handle seperate for move and jump/gravity
 	# 	- implement using speed, acc and velocity
 	# 	- seperate handling for x and y
 	# 	- add modifier for move acceleration.y and gravity
-	elif variant == 3:
+	elif mode_move == 3:
 
 		if dir.x != 0:
 			_speed += Constants.MOVE_ACCELERATION.x * delta
