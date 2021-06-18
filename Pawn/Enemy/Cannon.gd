@@ -5,7 +5,7 @@ onready var player = get_node(player_node)
 
 export var delay := 3.0 # time between shots
 
-var bullet_scene = preload("res://Pawn/Enemy/Bullet.tscn")
+var bullet_scene = preload("res://Pawn/Enemy/Bomb.tscn")
 
 var _rotation := 0.0
 var _reset := 0.0
