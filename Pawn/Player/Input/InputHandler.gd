@@ -1,7 +1,11 @@
 extends Control
 
-var axis_value
-var str_value
+var _dir := Vector2.ZERO setget , get_move_dir
+var _jump := false setget , is_jumping
+
+# temp value
+var axis_value := 0.0
+var str_value := ""
 
 onready var axes = $Axes
 onready var axes_mapped = $AxesMapped
@@ -14,6 +18,9 @@ func _unhandled_input(event):
 			self.visible = !self.visible
 
 func _physics_process(_delta: float) -> void:
+
+	_dir = Vector2.ZERO
+	
 	# Loop through the axes and show their current values
 	for axis in range(4):
 		var node = axes.get_node("Axis" + str(axis) + "/ProgressBar")
@@ -36,6 +43,15 @@ func _physics_process(_delta: float) -> void:
 			axis_value = (abs(axis_value) - Constants.JOYPAD_DEADZONE) / (1 - 2*Constants.JOYPAD_DEADZONE)
 			axis_value = axis_sign * clamp(axis_value, 0, 1)
 
+			if axis == 0:
+				_dir.x += axis_value
+			elif axis == 1:
+				_dir.x -= axis_value
+			elif axis == 2:
+				_dir.y += axis_value
+			elif axis == 3:
+				_dir.y -= axis_value
+
 			node.set_value(100 * axis_value)
 			node.get_node("Value").set_text(str(axis_value))
 
@@ -43,8 +59,16 @@ func _physics_process(_delta: float) -> void:
 				joypad_axes_mapped.get_node(str(axis) + "+").visible = axis_value > 0
 				joypad_axes_mapped.get_node(str(axis) + "-").visible = axis_value < 0
 
-func getAxis():
-	pass
+	# get additional button values
+	_jump = Input.is_action_just_pressed("jump")
 
-func getJump():
-	pass
+
+func get_move_dir() -> Vector2:
+	#var dir := Vector2(
+	#	Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+	#	0.0
+	#)
+	return _dir
+
+func is_jumping() -> bool:
+	return _jump
