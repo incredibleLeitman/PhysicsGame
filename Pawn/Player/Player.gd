@@ -18,19 +18,9 @@ func _physics_process(delta: float) -> void:
 
 	# speed is acceleration * delta
 	# velocity is dir * speed
-	
-	
+
 	# get move dir from InputHandler
-	var dir := Vector2(
-		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-		0.0
-	)
-	
-	# TODO: correctly use InputHandler
-	#var move_dir = InputHandler.get_move_dir()
-	#if dir != move_dir:
-	#	print("dir: ", dir, " vs InputHandler: ", move_dir)
-	
+	var dir = InputHandler.get_move_dir()
 	var jump = InputHandler.is_jumping()
 	
 	############	 	mode_move 1		 ############
@@ -39,11 +29,8 @@ func _physics_process(delta: float) -> void:
 	# 	- would always add jump -> add 0 in air
 	# 	- add modifier for move acceleration.y and gravity
 	if mode_move == 1:
-		
-		dir = Vector2(
-			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-			-1.0 if Input.is_action_just_pressed("jump") and is_on_floor() else 0.0
-		)
+
+		dir.y = -1.0 if jump and is_on_floor() else 0.0
 
 		_velocity += dir * Constants.MOVE_ACCELERATION * Vector2(1, 50)
 		if _debug: print("velocity: ", _velocity, " for dir: ", dir)
@@ -60,10 +47,8 @@ func _physics_process(delta: float) -> void:
 	#################################################
 	# its something, that doesn't feel shit :D
 	elif mode_move == 2:
-		dir = Vector2(
-			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-			-Constants.MOVE_ACCELERATION.y if Input.is_action_just_pressed("jump") and is_on_floor() else 1.0
-		)
+
+		dir.y = -Constants.MOVE_ACCELERATION.y if jump and is_on_floor() else 1.0
 
 		_velocity += dir * Constants.MOVE_ACCELERATION.x
 		if _debug: print("velocity: ", _velocity, " for dir: ", dir)
@@ -96,7 +81,7 @@ func _physics_process(delta: float) -> void:
 			apply_gravity(delta)
 			if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * mass * delta))
 		else:
-			if Input.is_action_just_pressed("jump"):
+			if jump:
 				_velocity.y -= Constants.MOVE_ACCELERATION.y * 50
 			else:
 				_velocity.y = 0

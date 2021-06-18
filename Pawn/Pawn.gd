@@ -24,7 +24,7 @@ func apply_gravity(delta: float) -> void:
 	_velocity.y += Constants.GRAVITY * mass * delta
 
 func add_force(force: Vector2) -> void:
-	_velocity = force
+	_velocity += force
 
 # used to bounce away from an non-moving object
 func bounce(normal: Vector2) -> void:
