@@ -30,10 +30,17 @@ func _physics_process(delta: float) -> void:
 
 	# target player
 	var pos = player.global_position
-	if abs(pos.x - $CollisionShapeBase.global_position.x) > 200 or abs(pos.y - $CollisionShapeBase.global_position.y) > 400 :
+	if abs(pos.x - global_position.x) > 200 or abs(pos.y - global_position.y) > 400:
 
+		var prev = $CollisionShapeTop/SpriteCrosshair.global_position
 		var x = pos.x - $CollisionShapeTop/SpriteCrosshair.global_position.x
 		var y = -pos.y - $CollisionShapeTop/SpriteCrosshair.global_position.y
+		
+#		var a = (g * x*x) / (2 * v2)
+#		var b = x
+#		var c = a + y
+#		
+#		var quotient = b*b - 4*a*c
 
 		# solve quadratic equation for theta
 		# shamelessly stolen from the great Alex Rose who used this in RudeBear
@@ -45,13 +52,14 @@ func _physics_process(delta: float) -> void:
 			_reset += delta
 
 			var result = (v2 - sqrt(quotient)) / (g*x)
+#			var result = (-b - sqrt(quotient)) / (2*a)
 			var angle = atan(result)
 
 			_velocity = Vector2(
 				(1 if x > 0 else -1) * speed * cos(angle),
 				(1 if x > 0 else -1) * speed * sin(angle)
 			)
-			
+
 			_draw_curve()
 
 			$CollisionShapeTop.rotation = angle + (PI if x < 0 else 0)
