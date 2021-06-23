@@ -72,7 +72,7 @@ reading instead of the raw value
 For a 2D platformer modify the value so that any x value from 0.9-1 will produce a value of 1 and
 e*very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled correctly
 
-InputManager.cs reads your input, adds a deadzone then scales the normalized value from 0.1 to 1
+InputManager.gd reads input, adds inner and outer deadzones and then scales to normalized value. Show the received and mapped input values using 'k'.
 
 **- Movement by forces vs velocity**
 
@@ -88,8 +88,7 @@ moves you by force.
 *Write your own drag function which will take a factor that can e.g. change depending on the fluid the
 character is in. You can also write a more advanced function that will support your Galilean Relativity*
 
-RadBoar.cs contains a function called Drag(). The drag changes depending on the fluid you’re
-traversing.
+Pawn.gd contains a ``apply_drag()`` function to lerp with the configured drag factor. Thus can be set using ``set_drag`` on Pawn and derived classes and is used if entering/exiting Water.
 
 **- Gravity function**
 
@@ -97,7 +96,7 @@ traversing.
 could also change the gravitational field strength based on where the character is ontriggerenter to
 have a kind of moonwalk area.*
 
-RadBoar.cs contains a function called Grav(). The gravity changes in different rooms.
+Pawn.gd contains a ``apply_gravity()`` function. Value can be changed using the ``set_gravity`` function on Pawn and derived classes.
 
 **- Collision Normals**
 

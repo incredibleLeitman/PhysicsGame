@@ -10,6 +10,7 @@ var _velocity := Vector2.ZERO
 var _is_in_rest := false
 
 onready var ground_velocity := Vector2.ZERO # velocity for ground, platform, etc...
+onready var _gravity := Constants.GRAVITY
 onready var _drag := Vector2(Constants.MOVE_DRAG, 0)
 
 var collision_handled := false # flag to indicate that another object already handled the collision
@@ -23,13 +24,14 @@ func _physics_process(delta: float) -> void:
 func get_ground_velocity() -> Vector2:
 	return _velocity
 
-func set_drag(drag : Vector2) -> void:
-	print(name, " -> setting drag to: ", drag)
-	_drag = drag
-	print(name, " -> setting drag to: ", _drag)
+func set_gravity(gravity : float) -> void:
+	_gravity = gravity
 
 func apply_gravity(delta: float) -> void:
-	_velocity.y += Constants.GRAVITY * mass * delta
+	_velocity.y += _gravity * mass * delta
+
+func set_drag(drag : Vector2) -> void:
+	_drag = drag
 
 func apply_drag():
 	_velocity.x = lerp(_velocity.x, ground_velocity.x, _drag.x)
