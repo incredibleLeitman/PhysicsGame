@@ -17,7 +17,7 @@ onready var joypad_axes = $JoypadDiagram/Axes
 onready var joypad_axes_mapped = $JoypadDiagramMapped/Axes
 
 const POS_HIDDEN = -260
-const JOYPAD_DEADZONE := 0.2
+const JOYPAD_DEADZONE := 0.2 # symetric inner and outer
 
 
 func _ready() -> void:

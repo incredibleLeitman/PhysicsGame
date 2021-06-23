@@ -34,7 +34,6 @@ texture = ExtResource( 4 )
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 0, -110 )
 current = true
-limit_left = 0
 limit_top = 0
 limit_smoothed = true
 smoothing_enabled = true

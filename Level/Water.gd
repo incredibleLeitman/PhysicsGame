@@ -6,8 +6,10 @@ func _ready() -> void:
 
 
 func _on_Area2D_body_entered(body: Node) -> void:
-	print(name, " on body entered: ", body.name)
+	if body.has_method("set_drag"):
+		body.set_drag(Vector2(Constants.WATER_DRAG, .1))
 
 
 func _on_Area2D_body_exited(body: Node) -> void:
-	print(name, " on body exit: ", body.name)
+	if body.has_method("set_drag"):
+		body.set_drag(Vector2(Constants.MOVE_DRAG, 0))
