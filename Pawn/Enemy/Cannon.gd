@@ -8,6 +8,7 @@ export var speed = 1000.0 # projectile speed
 export var g := Constants.GRAVITY
 
 onready var bomb_scene = preload("res://Pawn/Enemy/Bomb.tscn")
+onready var muzzle = $CollisionShapeTop/SpriteCrosshair
 onready var aim_curve = $Line2D
 onready var v2 = speed * speed
 
@@ -32,9 +33,8 @@ func _physics_process(delta: float) -> void:
 	var pos = player.global_position
 	if abs(pos.x - global_position.x) > 200 or abs(pos.y - global_position.y) > 400:
 
-		var prev = $CollisionShapeTop/SpriteCrosshair.global_position
-		var x = pos.x - $CollisionShapeTop/SpriteCrosshair.global_position.x
-		var y = -pos.y - $CollisionShapeTop/SpriteCrosshair.global_position.y
+		var x = pos.x - muzzle.global_position.x
+		var y = -pos.y - muzzle.global_position.y # TODO FIXME: this should be positive
 		
 #		var a = (g * x*x) / (2 * v2)
 #		var b = x
@@ -75,7 +75,7 @@ func _physics_process(delta: float) -> void:
 
 func _draw_curve() -> void:
 
-	aim_curve.global_position = $CollisionShapeTop/SpriteCrosshair.global_position
+	aim_curve.global_position = muzzle.global_position
 	for idx in range(0, 500):
 
 		var t = idx * get_physics_process_delta_time()
@@ -88,12 +88,9 @@ func _draw_curve() -> void:
 func _shoot() -> void:
 
 	var instance = bomb_scene.instance()
-	instance.position = $CollisionShapeTop/SpriteCrosshair.global_position
+	instance.position = muzzle.global_position
 	instance.initial_velocity = _velocity
-	#get_tree().get_root().add_child(instance)
-	get_parent().add_child(instance)
-	#instance.owner = self
-	#add_child(instance)
+	get_parent().add_child(instance) # add to enemy group
 
 	_reset = 0
 
