@@ -22,7 +22,7 @@ const JOYPAD_DEADZONE := 0.2
 
 func _ready() -> void:
 	rect_position.y = POS_HIDDEN
-	_pos_to = rect_position.y
+	_pos_to = POS_HIDDEN
 
 func _unhandled_input(event):
 	if event is InputEventKey:

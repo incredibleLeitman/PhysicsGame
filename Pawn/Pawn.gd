@@ -13,15 +13,21 @@ var ground_velocity := Vector2.ZERO # velocity for ground, platform, etc...
 
 var collision_handled := false # flag to indicate that another object already handled the collision
 
-export var MAX_SPEED := Vector2(500, 2000)
 
 func _physics_process(delta: float) -> void:
 	# this should stop the object from moving, which should stop colliding, which should stop endlessly adding gravity
 	# should actually happen if drag is working correctly
 	stop_at_rest()
 
+func get_ground_velocity() -> Vector2:
+	return _velocity
+
 func apply_gravity(delta: float) -> void:
 	_velocity.y += Constants.GRAVITY * mass * delta
+
+func apply_drag():
+	_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
+	#_velocity = lerp(_velocity, ground_velocity, Constants.MOVE_DRAG)
 
 func add_force(force: Vector2) -> void:
 	_velocity += force

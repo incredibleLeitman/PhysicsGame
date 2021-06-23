@@ -1,8 +1,8 @@
 extends Pawn
 
 
-export(Vector2) var initial_velocity := Vector2(2*MAX_SPEED.x, -500)
-export var max_lifetime := 7.0 # time before despawning in s ( = double the cannon shoot delay)
+export(Vector2) var initial_velocity := Vector2(1000, -500)
+export var max_lifetime := 3.0 # time before despawning in s
 var _alive := 0.0 # determine current lifetime
 
 var _debug_out := false
@@ -19,8 +19,7 @@ func _physics_process(delta: float) -> void:
 		apply_gravity(delta)
 
 	# using move and collide to get collsion
-	var collision = null
-	collision = move_and_collide(_velocity * delta)
+	var collision = move_and_collide(_velocity * delta)
 
 	# using move and slide and manually search for collisions
 	#_velocity = move_and_slide(_velocity, Vector2.UP)

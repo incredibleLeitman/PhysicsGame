@@ -6,12 +6,12 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 49.844
 
-[node name="Bullet" type="KinematicBody2D"]
+[node name="Bomb" type="KinematicBody2D"]
 collision_layer = 2
 collision_mask = 11
 script = ExtResource( 2 )
 
-[node name="bomb" type="Sprite" parent="."]
+[node name="Sprite" type="Sprite" parent="."]
 position = Vector2( -5.81741e-05, -6.81714 )
 scale = Vector2( 0.284192, 0.281656 )
 texture = ExtResource( 1 )
