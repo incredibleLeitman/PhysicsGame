@@ -242,6 +242,14 @@ Player can also be moved with a controller
 
 - [starting assets from GDQuest](https://github.com/GDQuest/godot-beginner-2d-platformer/releases/tag/1.1.0)
 
+- "Boom" from one of my previous projects "Phaethon 3200"
+
+- diverse Super Mario assets found from the internet
+
+- Alex Rose head from his [Twitter Account](https://twitter.com/alexrosegames?lang=de)
+
+- Boom Sound from [freesound.org](https://freesound.org/people/XHALE303/sounds/535592/)
+
 <a name="references" />
 
 ## Additional references and resources

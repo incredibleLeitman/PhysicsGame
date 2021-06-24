@@ -3,8 +3,10 @@ extends Pawn
 
 export(Vector2) var initial_velocity := Vector2(1000, -500)
 export var max_lifetime := 3.0 # time before despawning in s
-var _alive := 0.0 # determine current lifetime
 
+var _alive := 0.0 # determine current lifetime
+var _close_pawns = [] # array of pawn in explosion range
+var _timer := 1.0 # timer before exploding
 var _debug_out := false
 
 
@@ -76,5 +78,55 @@ func _physics_process(delta: float) -> void:
 
 	# destroy bullet after given lifetime
 	_alive += delta
+	if _alive > _timer:
+		var val = fmod($Sprite.modulate.g8 + 10, 255)/255
+		$Sprite.modulate = Color(1, val, val)
 	if _alive > max_lifetime:
-		queue_free()
+		explode()
+
+func explode (force = Vector2.ZERO) -> void:
+
+	max_lifetime = INF # stop from re-exploding
+
+	var tween = get_node("Tween")
+	$Sprite.visible = false
+	#$CollisionShape2D.disabled = true
+	$Boom.visible = true
+	$AudioStreamPlayer2D.play()
+	tween.interpolate_property($Boom, "scale",
+		Vector2(0.2, .2), Vector2(1, 1), 1.0,
+		Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.interpolate_property($Boom, "modulate", 
+		Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.0, 
+		Tween.TRANS_LINEAR, Tween.EASE_IN)
+	tween.start()
+
+	if _close_pawns.size() > 0:
+		print(name, " pawns(", _close_pawns.size(), "):")
+		for pawn in _close_pawns:
+			force += (pawn.position - position) #* Vector2(1, 100)
+			print("	", pawn.name, " add force: ", force)
+			if pawn.has_method("explode"):
+				pawn.exclude_pawn(self)
+				_close_pawns.erase(pawn)
+				pawn.explode(force)
+			else:
+				pawn.add_force(force * 10)
+
+
+func exclude_pawn(body: Node) -> void:
+	_close_pawns.erase(body)
+
+
+func _on_Tween_tween_all_completed() -> void:
+	queue_free()
+
+
+func _on_Area2D_body_entered(body: Node) -> void:
+	if body is Pawn and body != self:
+		_close_pawns.append(body)
+
+
+func _on_Area2D_body_exited(body: Node) -> void:
+	if body is Pawn:
+		_close_pawns.erase(body)

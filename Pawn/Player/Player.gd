@@ -77,6 +77,9 @@ func _physics_process(delta: float) -> void:
 		else:
 			_speed = 0
 
+		# TODO: correctly clamp move acceleration
+		_speed = clamp(_speed, -MAX_SPEED.x, MAX_SPEED.x)
+
 		_velocity += dir * _speed
 		if _debug: print("velocity: ", _velocity, " for dir: ", dir, " and speed: ", _speed)
 
@@ -87,8 +90,9 @@ func _physics_process(delta: float) -> void:
 		else:
 			if jump:
 				initial_jump()
-			else:
-				_velocity.y = 0
+			# TODO FIXME: should be handled by drag
+			#else:
+			#	_velocity.y = 0
 
 	############	 	mode_move 4		 ############
 	#################################################
@@ -107,8 +111,8 @@ func _physics_process(delta: float) -> void:
 
 	apply_drag()
 
-	# clamp to max speed
-	_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
+	# FIXME: cannot clamp total velocity because that would nullify applied_force
+	#_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
 
 	#print("final velocity: ", _velocity)
 	_velocity = move_and_slide(_velocity)

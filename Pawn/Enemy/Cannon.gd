@@ -65,7 +65,10 @@ func _physics_process(delta: float) -> void:
 			$CollisionShapeTop.rotation = angle + (PI if x < 0 else 0)
 
 			if _reset > delay:
-				_shoot()
+				# wait 0.5 seconds then fire more bombs
+				#for i in range(0, 3):
+					#yield(get_tree().create_timer(0.5), "timeout")
+					_shoot()
 
 			return
 
