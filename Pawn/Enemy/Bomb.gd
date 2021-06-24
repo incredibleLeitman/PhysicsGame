@@ -4,6 +4,8 @@ extends Pawn
 export(Vector2) var initial_velocity := Vector2(1000, -500)
 export var max_lifetime := 3.0 # time before despawning in s
 
+onready var radius = $Area2D/CollisionShape2D.shape.radius
+
 var _alive := 0.0 # determine current lifetime
 var _close_pawns = [] # array of pawn in explosion range
 var _timer := 1.0 # timer before exploding
@@ -91,27 +93,33 @@ func explode (force = Vector2.ZERO) -> void:
 	var tween = get_node("Tween")
 	$Sprite.visible = false
 	#$CollisionShape2D.disabled = true
-	$Boom.visible = true
+	$SpriteBoom.visible = true
 	$AudioStreamPlayer2D.play()
-	tween.interpolate_property($Boom, "scale",
+	tween.interpolate_property($SpriteBoom, "scale",
 		Vector2(0.2, .2), Vector2(1, 1), 1.0,
 		Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	tween.interpolate_property($Boom, "modulate", 
+	tween.interpolate_property($SpriteBoom, "modulate", 
 		Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.0, 
 		Tween.TRANS_LINEAR, Tween.EASE_IN)
 	tween.start()
 
 	if _close_pawns.size() > 0:
-		print(name, " pawns(", _close_pawns.size(), "):")
 		for pawn in _close_pawns:
-			force += (pawn.position - position) #* Vector2(1, 100)
-			print("	", pawn.name, " add force: ", force)
+			var dist = pawn.position - position
+			# shorten vector to calc from bomb border to player
+			var dist_length = dist.length()
+			dist = dist * (1 - 50/dist_length)
+			
+			var force_factor = abs(1.0 / (radius / (radius - dist.length())))
+			#force += force_factor * dist.normalized() * 3000
+			#force.y *= 0.5
+			force += force_factor * dist.normalized() * Vector2(3000, 1000)
 			if pawn.has_method("explode"):
-				pawn.exclude_pawn(self)
 				_close_pawns.erase(pawn)
+				pawn.exclude_pawn(self)
 				pawn.explode(force)
 			else:
-				pawn.add_force(force * 10)
+				pawn.add_force(force)
 
 
 func exclude_pawn(body: Node) -> void:
