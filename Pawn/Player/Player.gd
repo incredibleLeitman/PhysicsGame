@@ -3,15 +3,17 @@ extends Pawn
 
 onready var InputHandler = $InputHandler/Joypads
 onready var Alex = $Alex
-onready var GroundRay = $CollisionShape2D/GroundRay
+onready var GroundRay = $GroundRay
 
 export var mode_move := 3
 
 var _debug := false
 var _is_on_ground := false
+var _timer := 0.0
 
-const MOVE_ACCELERATION := Vector2(200, 1000)
-const MAX_SPEED := Vector2(500, 2000)
+const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping
+const MOVE_ACCELERATION := Vector2(200, 1000) # acceleration through move input
+const MAX_SPEED := Vector2(500, 2000) # max move speed
 
 func _process(delta: float) -> void:
 
@@ -114,44 +116,89 @@ func _physics_process(delta: float) -> void:
 	# FIXME: cannot clamp total velocity because that would nullify applied_force
 	#_velocity.x = clamp(_velocity.x, -MAX_SPEED.x, MAX_SPEED.x)
 
-	#print("final velocity: ", _velocity)
 	_velocity = move_and_slide(_velocity)
 	#print("final velocity after slide: ", _velocity)
 
-	if get_slide_count() > 0:
+	# get collision normal to check if is on ground
+	var amount = 0
+	var normal = Vector2.ZERO
+	var collider = null
 
-		var collision = get_slide_collision(0)
-		if collision.normal.y < -0.85 and not _is_on_ground:
-			print("on ground")
-			_is_on_ground = true
+	var debug_col = false
 
-		$CollisionShape2D.rotation = -acos(collision.normal.dot(Vector2.UP))
+	var use_average = true
+	# average all collected collision normals
+	# collider could be different, but since only ground_velocity is used
+	# this should be no problem
+	if use_average:
+		if get_slide_count() > 0:
+			var count = get_slide_count()
+			if debug_col: print("sliding collision count: ", count)
+			for i in count:
+				var collision = get_slide_collision(i)
+				if debug_col: print("	", i, ". normal: ", collision.normal)
+				amount += 1
+				normal += collision.normal
+				if collider != collision.collider:
+					collider = collision.collider
+					if debug_col: print("setting new collider: ", collider.name)
 
-		set_floor_velocity(collision.collider)
-
-	#elif _is_on_ground:
-	else:
 		# use a safety raycast to determine on floor
 		#$GroundRay.force_raycast_update()
-		if not GroundRay.is_colliding():
-			if _is_on_ground:
-				print("lost ground")
+		if GroundRay.is_colliding():
+			if debug_col: print("	raycast normal: ", GroundRay.get_collision_normal())
+			if use_average:
+				amount += 1
+				normal += GroundRay.get_collision_normal()
+				if collider != GroundRay.get_collider():
+					collider = GroundRay.get_collider()
+			else:
+				normal = GroundRay.get_collision_normal()
+				collider = GroundRay.get_collider()
+
+		normal = normal / max(amount, 1)
+		if debug_col: print("==== average normal: ", normal)
+
+	# only rely on raycast
+	else:
+		if GroundRay.is_colliding():
+			normal = GroundRay.get_collision_normal()
+			if debug_col: print("	raycast normal: ", normal)
+			collider = GroundRay.get_collider()
+
+	if normal.y < -0.85:
+
+		if not _is_on_ground:
+			print("on ground")
+			_timer = 0.0
+			_is_on_ground = true
+	
+	# otherwise player is not necessarily in the air
+	# but forbidden to jump -> still set rotation
+	elif _is_on_ground:
+		_timer += delta
+		if _timer > GRACE_PERIOD:
+			print("lost ground for timer: ", _timer)
 			_is_on_ground = false
-			$CollisionShape2D.rotation = 0
-			ground_velocity = Vector2.ZERO
-		else:
-			set_floor_velocity(GroundRay.get_collider())
+
+	# TODO FIXME: lerping rotation works better than setting instantly,
+	#			  -> maybe adding a timer to fully remove flickering?
+	var rotator = $CollisionShape2D
+	rotator.rotation = lerp(rotator.rotation, asin(normal.dot(Vector2.RIGHT)), 0.1)
+
+	set_floor_velocity(collider) # set to Vector2.ZERO if null
+
 
 func initial_jump() -> void:
 	print("jump")
 	_is_on_ground = false
 	_velocity.y -= MOVE_ACCELERATION.y
 
-func set_floor_velocity(collider) -> void:
-	if collider.has_method("get_ground_velocity"):
+func set_floor_velocity(collider:Object = null) -> void:
+	if collider and collider.has_method("get_ground_velocity"):
 		var vel = collider.get_ground_velocity()
 		if vel != ground_velocity:
 			ground_velocity = vel
 			_velocity = ground_velocity
-	#elif not ground_velocity.is_equal_approx(Vector2.ZERO):
-	#	ground_velocity = Vector2.ZERO
+	else:
+		ground_velocity = Vector2.ZERO
