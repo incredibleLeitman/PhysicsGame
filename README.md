@@ -71,7 +71,7 @@ C. Your mark from the Euler group (10 points)
 - [x] Galilean relativity
 - [ ] Centrifugal/Coriolis correction
 - [ ] Cross products in physics (3D)
-- [ ] Projectile Motion
+- [x] Projectile Motion
 - [ ] Pendulums
 - [ ] Advanced slope physics
 
@@ -201,6 +201,19 @@ I would personally not choose this topic because this is an analytical way of do
 **- Projectile Motion**
 
 *A projectile launcher with a fixed velocity that can calculate the correct angle at which to project something in order to hit a target (or the character) Or e.g. a Deterministic parabolic arc simulator that will show where an object flies before it is fired*
+
+Cannon.gd tracks the position of the Player if in reachable range and outside a defined close range to calculate the angle and velocity of fired bombs to hit. The resulting velocity is drawn per line, simulating the Bomb movement.
+
+Somehow this is a little offset: if the angle to hit the Player is < 45 ° the arc is to small, at exactly 45 ° it fits, > 45 ° it's larger than thge correct distance.
+I have spend several hours trying to pin down the problem but was not able to fix it :/
+I manually derived the quadratic equation for theta on paper but ended up using the shown code from RudeBear because this gives the most accurate results.
+
+I believe this could be either a problem with scaling, although I double-checked all the objects and positions in the level and could'nt find something that doesn't look correct.
+Or maybe I just messed up applying the correct quadrant for the shooting direction.
+
+
+For this task I also added a "SUVAT.gd" node to provide an api for all the equations, but I ended up not using them in code.
+
 
 **- Pendulums**
 
