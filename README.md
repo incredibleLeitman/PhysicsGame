@@ -24,34 +24,34 @@ Your mark will be based on
 A. Your 7 additional highest marks from the standard or toughie groups excluding those in
 point B (70 points)
 B. Your 2 highest marks from the toughie group (20 points)
-C. Your mark from the Euler group (10 points
+C. Your mark from the Euler group (10 points)
 
 **Standard group:**
-- Normalisation and magnitude
-- Movement by forces vs velocity
-- Drag function (not unity default)
-- Gravity function (not unity default)
-- Collision Normals
-- Angular velocity
-- Momentum
-- Impulse
-- Orbit
-- Friction + Mass
-- Coefficient of restitution
-- Reflection
-- Potential/kinetic energy
+- [x] Normalisation and magnitude
+- [ ] Movement by forces vs velocity
+- [x] Drag function (not unity default)
+- [x] Gravity function (not unity default)
+- [x] Collision Normals
+- [ ] Angular velocity
+- [ ] Momentum
+- [ ] Impulse
+- [ ] Orbit
+- [ ] Friction + Mass
+- [x] Coefficient of restitution
+- [ ] Reflection
+- [ ] Potential/kinetic energy
 
 **Toughie group:**
-- Hooke's law/Damping: This can be a spring, an elevator, water, a rope
-- Galilean relativity
-- Centrifugal/Coriolis correction
-- Cross products in physics (3D)
-- Projectile Motion
-- Pendulums
-- Advanced slope physics
+- [ ] Hooke's law/Damping: This can be a spring, an elevator, water, a rope
+- [x] Galilean relativity
+- [ ] Centrifugal/Coriolis correction
+- [ ] Cross products in physics (3D)
+- [ ] Projectile Motion
+- [ ] Pendulums
+- [ ] Advanced slope physics
 
 **Euler group:**
-- Demonstrate understanding of euler integration
+- [ ] Demonstrate understanding of euler integration
 
 
 <a name="overview" />
@@ -71,6 +71,8 @@ For a 3D game, add a deadzone and change the magnitude so it uses the squared va
 reading instead of the raw value
 For a 2D platformer modify the value so that any x value from 0.9-1 will produce a value of 1 and
 e*very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled correctly
+
+![InputHandler](Images/InputHandler.png?raw=true "InputHandler")
 
 InputManager.gd reads input, adds inner and outer deadzones and then scales to normalized value. Show the received and mapped input values using 'k'.
 
@@ -92,25 +94,19 @@ Pawn.gd contains a ``apply_drag()`` function to lerp with the configured drag fa
 
 **- Gravity function**
 
-*Write a gravity function with a uniform gravitational acceleration regardless of inertial mass. You
-could also change the gravitational field strength based on where the character is ontriggerenter to
-have a kind of moonwalk area.*
+*Write a gravity function with a uniform gravitational acceleration regardless of inertial mass. You could also change the gravitational field strength based on where the character is ontriggerenter to have a kind of moonwalk area.*
 
 Pawn.gd contains a ``apply_gravity()`` function. Value can be changed using the ``set_gravity`` function on Pawn and derived classes.
 
 **- Collision Normals**
 
-*When the character hits the floor, they should become grounded so they can jump again. Depending
-on the angle of what they hit, they should not become grounded. You can demonstrate this with
-walls or even sloped surfaces.*
+*When the character hits the floor, they should become grounded so they can jump again. Depending on the angle of what they hit, they should not become grounded. You can demonstrate this with walls or even sloped surfaces.*
 
-RadBoar.cs OnCollisionEnter2D reads the y normal of the collision and uses that to check whether
-you’re grounded
+Player has a downward raycast attached to it which reads the normal of it in Player.gd. This value is used to determine, if the player is grounded and sets the rotation of the sprite to align the model with the surface.
 
 **- Angular Velocity**
 
-*A missile that comes towards you and rotates by angular velocity rather than by quaternion towards
-its forward. Easier in 2d!*
+*A missile that comes towards you and rotates by angular velocity rather than by quaternion towards its forward. Easier in 2d!*
 
 **- Momentum**
 
@@ -118,6 +114,8 @@ its forward. Easier in 2d!*
 
 Explosion.cs makes a bigger explosion with more particles depending on the mass and
 relativeVelocity of the two colliding objects
+
+Bomb.gd 
 
 **- Impulse**
 
@@ -135,28 +133,22 @@ Orb.cs follows you according to GMm/r^2
 
 **- Friction + Mass**
 
-*Add some different slopes with different coefficients of friction (using your own function rather than
-Physics Materials). You could go the extra mile and do dynamic vs static friction or resolving slopes
-correctly*
+*Add some different slopes with different coefficients of friction (using your own function rather than Physics Materials). You could go the extra mile and do dynamic vs static friction or resolving slopes correctly*
 
 **- Coefficient of Restitution**
 
-*Instead of using the built in “bounciness” you can make your own coefficient of restitution, where
-two objects collide and pass on velocity correctly. You can make bouncy balls and bowling balls e.g.*
+*Instead of using the built in “bounciness” you can make your own coefficient of restitution, where two objects collide and pass on velocity correctly. You can make bouncy balls and bowling balls e.g.*
+
+Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving object such as Player or other Bombs for itself and the collided object. If they collide with non-moving objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
 
 **- Reflection**
 
-*A mirror puzzle which raycasts outwards from a laser, and if it hits anything on a mirror mask, will
-reflect. At this point it would take the angle of incidence, raycast towards the angle of reflection and
-once it hits a non reflective surface represent all the reflections with a LineRenderer*
+*A mirror puzzle which raycasts outwards from a laser, and if it hits anything on a mirror mask, will reflect. At this point it would take the angle of incidence, raycast towards the angle of reflection and once it hits a non reflective surface represent all the reflections with a LineRenderer*
 
 **- Potential/kinetic energy**
 
-*A simple harmonic oscillator that converts potential energy into kinetic energy and vice versa and
-displays their values. You could do a mass on a pulley e.g.
-I would personally not choose this topic because this is an analytical way of doing physics and not
-generally a simulation based one, and therefore it is rarely used in games. But since it’s on the
-syllabus, I will mark it if you try it.*
+*A simple harmonic oscillator that converts potential energy into kinetic energy and vice versa and displays their values. You could do a mass on a pulley e.g.
+I would personally not choose this topic because this is an analytical way of doing physics and not generally a simulation based one, and therefore it is rarely used in games. But since it’s on the syllabus, I will mark it if you try it.*
 
 <a name="toughie-grp" />
 
@@ -164,55 +156,37 @@ syllabus, I will mark it if you try it.*
 
 **- Hooke’s Lap/Damping**
 
-*A damped pair of scales. When you push one down, the other goes up, they wobble and then damp.
-A body of water represented by a line renderer, the surface splashes when you jump on it*
+*A damped pair of scales. When you push one down, the other goes up, they wobble and then damp. A body of water represented by a line renderer, the surface splashes when you jump on it*
 
 **- Galilean Relativity**
 
-*Working moving platforms in which your normal physics, gravity, drag apply from your typical frame
-of reference into your new frame and you correctly inherit the velocity of your parent with physics
-(not through trying to use parenting or moving by transform)*
+*Working moving platforms in which your normal physics, gravity, drag apply from your typical frame of reference into your new frame and you correctly inherit the velocity of your parent with physics (not through trying to use parenting or moving by transform)*
 
-I tried to implement a moving frame of reference in FloatingArena.cs. Floating arena moves at a
-constant velocity, I wanted to show that Rad Boar would have his normal expected velocity + the
-velocity of the Floating Arena to demonstrate relativity. Unfortunately when I tried adding on the
-velocity every frame or parenting him to the object, this did not solve the problem, and he
-accelerates instead of appearing to move normally in his local frame.
+``Plattform.gs`` moves (defined by it’s mode) at a constant velocity. If Player.gd touches the top surface (one way collision) the current platform velocity is set as ground_velocity which is used as target for the drag lerp. The ground which the player stands on is constantly monitored to determine velocity changes of the plattform as well as falling/jumping off.
 
 **- Centrifugal/Coriolis correction**
 
-*When you’re standing on a rotating moving platform, your frame of reference is rotating. You can
-make your character stay on a rotating platform correctly by simulating the Centrifugal force.
-Likewise if you simulate the Coriolis force they can walk along the middle without veering to one side.
-No need to do both, one is fine if this topic is selected.*
+*When you’re standing on a rotating moving platform, your frame of reference is rotating. You canmake your character stay on a rotating platform correctly by simulating the Centrifugal force.Likewise if you simulate the Coriolis force they can walk along the middle without veering to one side. No need to do both, one is fine if this topic is selected.*
 
 **- Cross products in Physics (3D)**
 
-*Throw an object and have it spin towards the right direction depending on the view angle and where
-you project it*
+*Throw an object and have it spin towards the right direction depending on the view angle and where you project it*
 
 **- Projectile Motion**
 
-*A projectile launcher with a fixed velocity that can calculate the correct angle at which to project
-something in order to hit a target (or the character)
-Or e.g. a Deterministic parabolic arc simulator that will show where an object flies before it is fired*
+*A projectile launcher with a fixed velocity that can calculate the correct angle at which to project something in order to hit a target (or the character) Or e.g. a Deterministic parabolic arc simulator that will show where an object flies before it is fired*
 
 **- Pendulums**
 
-*Pendulums that correctly oscillate with angular velocity showing a correct period depending on the
-length. Bonus if you go full gyro*
+*Pendulums that correctly oscillate with angular velocity showing a correct period depending on the length. Bonus if you go full gyro*
 
 **- Advanced slope physics**
 
-*Slope physics where, upon running up slopes of different heights, you will either manage to walk up
-(albeit slower) or you will slide down depending on the angle. Standing still on slopes and railings
-when no input is detected instead of sliding down.*
+*Slope physics where, upon running up slopes of different heights, you will either manage to walk up (albeit slower) or you will slide down depending on the angle. Standing still on slopes and railings when no input is detected instead of sliding down.*
 
 **- Hooke’s Law AND Pendulum**
 
-I added a rope that you can swing on in Pendulum.cs. Not only does it swing with a period based on
-the length, but the rope itself is stretchy and oscillates when you jump on it, eventually reaching 0
-due to damping!
+I added a rope that you can swing on in Pendulum.cs. Not only does it swing with a period based on the length, but the rope itself is stretchy and oscillates when you jump on it, eventually reaching 0 due to damping!
 
 <a name="euler-grp" />
 
@@ -220,9 +194,7 @@ due to damping!
 
 **- Euler integration**
 
-*Moving something to a desired position via its VELOCITY without a rigidbody.position/move function.
-Any function that shows you really understand how Time.fixedDeltaTime works in the engine and
-how it ties into calculus.*
+*Moving something to a desired position via its VELOCITY without a rigidbody.position/move function. Any function that shows you really understand how Time.fixedDeltaTime works in the engine and how it ties into calculus.*
 
 Companion.cs lerps your little companion towards you using its velocity
 

@@ -79,11 +79,13 @@ func _physics_process(delta: float) -> void:
 				bounce(collision.normal)
 				if _debug_out: print(name, " vel after bounce: ", _velocity, " length: ", _velocity.length())
 
-	# destroy bullet after given lifetime
+	
 	_alive += delta
+	# modulate red for explosion timer
 	if _alive > _timer:
 		var val = fmod($Sprite.modulate.g8 + 10, 255)/255
 		$Sprite.modulate = Color(1, val, val)
+	# destroy bullet after given lifetime
 	if _alive > max_lifetime:
 		explode()
 
