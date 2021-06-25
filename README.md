@@ -58,12 +58,12 @@ C. Your mark from the Euler group (10 points)
 - [x] Gravity function (not unity default)
 - [x] Collision Normals
 - [ ] Angular velocity
-- [ ] Momentum
+- [x] Momentum
 - [ ] Impulse
 - [ ] Orbit
 - [ ] Friction + Mass
 - [x] Coefficient of restitution
-- [ ] Reflection
+- [x] Reflection
 - [ ] Potential/kinetic energy
 
 **Toughie group:**
@@ -140,17 +140,18 @@ Player has a downward raycast attached to it which reads the normal of it in Pla
 Explosion.cs makes a bigger explosion with more particles depending on the mass and
 relativeVelocity of the two colliding objects
 
-Bomb.gd 
+If a Bomb collides with another Bomb or Player, the momentum of both changes. Although both using a default mass of 1, their velocity is usually different.
+When a Bomb explodes it applies a force depending on it's mass and the distance to an object (the more the nearer). In case the affected Object is also a Bomb, another explosion is triggered, summing the resulting forces. This means, if a Player stands beside multiple bombs when they explode, the combined force of all explosions it added.
 
 **- Impulse**
 
 *Show your understanding of impulse with a force that happens over a short period of time rather than instant. E.g. an advanced jump cycle in which the character has a variable jump height depending on how long they press A, rather than a simple “add y velocity”.*
 
+TODO: jump and acceleration
+
 **- Orbit**
 
-*A sentry bot that orbits you following Newton’s Law of Gravitation would satisfy this in any kind of 2d
-game, or you could straight up do planets in space if you want to make a space game. It could even
-just be a set-piece you stumble upon.*
+*A sentry bot that orbits you following Newton’s Law of Gravitation would satisfy this in any kind of 2d game, or you could straight up do planets in space if you want to make a space game. It could even just be a set-piece you stumble upon.*
 
 Orb.cs follows you according to GMm/r^2
 
@@ -162,11 +163,13 @@ Orb.cs follows you according to GMm/r^2
 
 *Instead of using the built in “bounciness” you can make your own coefficient of restitution, where two objects collide and pass on velocity correctly. You can make bouncy balls and bowling balls e.g.*
 
-Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving object such as Player or other Bombs for itself and the collided object. If they collide with non-movable objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
+Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving Pawn such as Player or other Bombs for itself and the collided object. If they collide with non-movable objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
 
 **- Reflection**
 
 *A mirror puzzle which raycasts outwards from a laser, and if it hits anything on a mirror mask, will reflect. At this point it would take the angle of incidence, raycast towards the angle of reflection and once it hits a non reflective surface represent all the reflections with a LineRenderer*
+
+Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function when colliding with walls to adjust their given velocity, which would result in the reflected angle if there would be no drag or gravity applied.
 
 **- Potential/kinetic energy**
 
