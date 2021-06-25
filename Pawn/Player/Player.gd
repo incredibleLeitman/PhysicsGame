@@ -199,6 +199,6 @@ func set_floor_velocity(collider:Object = null) -> void:
 		var vel = collider.get_ground_velocity()
 		if vel != ground_velocity:
 			ground_velocity = vel
-			_velocity = ground_velocity
+			#_velocity = ground_velocity # drag lerps to this velocity
 	else:
 		ground_velocity = Vector2.ZERO
