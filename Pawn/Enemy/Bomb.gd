@@ -5,11 +5,12 @@ export(Vector2) var initial_velocity := Vector2(1000, -500)
 export var max_lifetime := 3.0 # time before despawning in s
 export var explosion_force := Vector2(3000, 1000) # how much an explosion moves objects
 
-onready var radius = $Area2D/CollisionShape2D.shape.radius
+onready var radius = $Area2D/CollisionShape2D.shape.radius * scale.x # need to be a circle to work correctly
 
 var _alive := 0.0 # determine current lifetime
 var _close_pawns = [] # array of pawn in explosion range
 var _timer := 1.0 # timer before exploding
+var _stop_moving := false # dont move explosion sprite
 var _debug_out := false
 
 
@@ -18,16 +19,28 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 
-	var cur_ms = OS.get_ticks_msec()
+	if not _stop_moving:
+		_handle_movement(delta)
+	
+	_alive += delta
+	# modulate red for explosion timer
+	if _alive > _timer:
+		var val = fmod($Sprite.modulate.g8 + 10, 255)/255
+		$Sprite.modulate = Color(1, val, val)
+	# destroy bullet after given lifetime
+	if _alive > max_lifetime:
+		explode()
+
+
+func _handle_movement(delta: float) -> void:
 
 	if not is_on_floor() and not _is_in_rest:
 		apply_gravity(delta)
 
 	# using move and collide to get collsion
 	var collision = move_and_collide(_velocity * delta)
-
 	# using move and slide and manually search for collisions
-	#_velocity = move_and_slide(_velocity, Vector2.UP)
+	#_velocity = move_and_slide(_velocity)
 	#var slide_count = get_slide_count()
 	#var collision = get_slide_collision(slide_count - 1) if slide_count else null
 	if collision and collision.collider:
@@ -35,11 +48,8 @@ func _physics_process(delta: float) -> void:
 		if collision.collider is Enemy:
 			# skipping basic enemy type
 			pass
-		elif collision_handled:
-			if _debug_out: print("\n", cur_ms, " ", name, " is having collision handled -> pass")
 			collision_handled = false
 		else:
-			if _debug_out: print("\n", cur_ms, " collision from ", name, " with ", collision.collider.name, ", ", collision.collider_id)
 
 			# bounce off obstacles
 			# material 		COR
@@ -79,25 +89,16 @@ func _physics_process(delta: float) -> void:
 				bounce(collision.normal)
 				if _debug_out: print(name, " vel after bounce: ", _velocity, " length: ", _velocity.length())
 
-	
-	_alive += delta
-	# modulate red for explosion timer
-	if _alive > _timer:
-		var val = fmod($Sprite.modulate.g8 + 10, 255)/255
-		$Sprite.modulate = Color(1, val, val)
-	# destroy bullet after given lifetime
-	if _alive > max_lifetime:
-		explode()
 
 func explode (force = Vector2.ZERO) -> void:
 
+	_stop_moving = true
 	max_lifetime = INF # stop from re-exploding
 
-	var tween = get_node("Tween")
 	$Sprite.visible = false
-	#$CollisionShape2D.disabled = true
 	$SpriteBoom.visible = true
 	$AudioStreamPlayer2D.play()
+	var tween = get_node("Tween")
 	tween.interpolate_property($SpriteBoom, "scale",
 		Vector2(0.2, .2), Vector2(1, 1), 1.0,
 		Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
@@ -111,14 +112,18 @@ func explode (force = Vector2.ZERO) -> void:
 			var dist = pawn.position - position
 			# shorten vector to calc from bomb border to player
 			var dist_length = dist.length()
-			dist = dist * (1 - 50/dist_length)
-
+			var border = $CollisionShape2D.shape.radius * scale.x
+			dist = dist * (1 - border/dist_length)
+			
 			var force_factor = abs(1.0 / (radius / (radius - dist.length())))
-			force += force_factor * dist.normalized() * explosion_force
+			force += force_factor * dist.normalized() * explosion_force * mass
+			if _debug_out: print(name, " applying for to ", pawn.name, " -> applying explosion force: ", force, " with force factor: ", force_factor, " for dist_lengh: ", dist_length)
+			# trigger explosion of other bombs
 			if pawn.has_method("explode"):
 				_close_pawns.erase(pawn)
 				pawn.exclude_pawn(self)
 				pawn.explode(force)
+			# force player movement
 			else:
 				pawn.add_force(force)
 
