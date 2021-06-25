@@ -10,9 +10,11 @@ export var mode_move := 3
 var _debug := false
 var _is_on_ground := false
 var _timer := 0.0
+var _is_jumping := false
+var _jump_start := 0.0
 
 const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping
-const MOVE_ACCELERATION := Vector2(200, 1000) # acceleration through move input
+const MOVE_ACCELERATION := Vector2(200, 300) # acceleration through move input
 const MAX_SPEED := Vector2(500, 2000) # max move speed
 
 func _process(delta: float) -> void:
@@ -169,7 +171,8 @@ func _physics_process(delta: float) -> void:
 			print("on ground")
 			_timer = 0.0
 			_is_on_ground = true
-	
+			_is_jumping = false
+
 	# otherwise player is not necessarily in the air
 	# but forbidden to jump -> still set rotation
 	elif _is_on_ground:
@@ -187,9 +190,21 @@ func _physics_process(delta: float) -> void:
 
 
 func initial_jump() -> void:
-	print("jump")
-	_is_on_ground = false
-	_velocity.y -= MOVE_ACCELERATION.y
+
+	var cur_ms = OS.get_ticks_msec()
+	if not _is_jumping:
+		print("burst jump")
+		_is_jumping = true
+		_jump_start = cur_ms
+		_velocity.y -= MOVE_ACCELERATION.y
+	else:
+		# TODO: gradially apply minor jump acceleration
+		if _jump_start < cur_ms + 200:
+			_velocity.y -= MOVE_ACCELERATION.y * get_physics_process_delta_time() * 10
+			print("TODO: minor jump for _jumpstart: ", _jump_start, " after: ", (cur_ms - _jump_start))
+		else:
+			_is_jumping = false
+			print("ending jump after: ", (cur_ms - _jump_start))
 
 func set_floor_velocity(collider:Object = null) -> void:
 	if collider and collider.has_method("get_ground_velocity"):
