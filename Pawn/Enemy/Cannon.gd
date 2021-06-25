@@ -19,11 +19,9 @@ var _reset := 0.0
 func _ready() -> void:
 	set_physics_process(false)
 
-	#if name == "Cannon":
-	#	for deg in range(0, 361, 5):
-	#		var rad = deg2rad(deg)
-	#		print("deg: ", deg, " in rad: ", rad)
-	#		print("	rad: -> tan: ", tan(rad), " -> atan: ", atan(tan(rad)), " back to grad: ", rad2deg(atan(tan(rad))))
+	# if player was not assigned in inspector
+	if not player: player = get_parent().get_parent().get_node("Player")
+
 
 func _physics_process(delta: float) -> void:
 
