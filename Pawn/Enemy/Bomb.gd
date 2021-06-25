@@ -3,6 +3,7 @@ extends Pawn
 
 export(Vector2) var initial_velocity := Vector2(1000, -500)
 export var max_lifetime := 3.0 # time before despawning in s
+export var explosion_force := Vector2(3000, 1000) # how much an explosion moves objects
 
 onready var radius = $Area2D/CollisionShape2D.shape.radius
 
@@ -109,11 +110,9 @@ func explode (force = Vector2.ZERO) -> void:
 			# shorten vector to calc from bomb border to player
 			var dist_length = dist.length()
 			dist = dist * (1 - 50/dist_length)
-			
+
 			var force_factor = abs(1.0 / (radius / (radius - dist.length())))
-			#force += force_factor * dist.normalized() * 3000
-			#force.y *= 0.5
-			force += force_factor * dist.normalized() * Vector2(3000, 1000)
+			force += force_factor * dist.normalized() * explosion_force
 			if pawn.has_method("explode"):
 				_close_pawns.erase(pawn)
 				pawn.exclude_pawn(self)
