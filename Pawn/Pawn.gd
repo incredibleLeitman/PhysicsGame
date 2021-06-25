@@ -40,7 +40,7 @@ func apply_drag():
 func add_force(force: Vector2) -> void:
 	_velocity += force
 
-# used to bounce away from an non-moving object
+# used to bounce away from an non-movable object
 func bounce(normal: Vector2) -> void:
 	_velocity = -(2.0 * normal * _velocity.dot(normal) - _velocity) * cor
 

@@ -22,9 +22,6 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 
-	# speed is acceleration * delta
-	# velocity is dir * speed
-
 	# get move dir from InputHandler
 	var dir = InputHandler.get_move_dir()
 	var jump = InputHandler.is_jumping()

@@ -4,6 +4,7 @@ Simple game prototype to show some physic game engine basics for @FHTechnikumWie
 ## Table of Contents
 
 - [Topics](#topics)
+- [Trivia](#trivia)
 - [Overview and description](#overview)
 	* [Standard Group](#standard-grp)
 	* [Toughie Group](#toughie-grp)
@@ -11,6 +12,30 @@ Simple game prototype to show some physic game engine basics for @FHTechnikumWie
 - [Controls](#control-anchor)
 - [Assets](#assets)
 - [References and resources](#references)
+
+<a name="trivia" />
+
+## Trivia
+
+### Terminology
+
+- Acceleration a is the change of velocity over time
+- Speed s is change of position over time, acceleration * delta
+- Velocity v is dir * speed
+- Force F push or pull on an object thtat cause a mass to accelerate (gravity, magnetism, ...)
+
+ ``F = m*a = dp/dt``
+
+- Momentum p
+
+``p = m*v``
+
+### Newtons laws
+
+I. An object at rest will stay at rest, and an object in motion will stay in motion unless acted on by a net external force
+II. The rate of change of momentum of a body over time is directly proportional to the force applied, and occurs in the same direction as the applied force.
+III. All forces between two objects exist in equal magnitude and opposite direction.
+
 
 <a name="topics" />
 
@@ -74,7 +99,7 @@ e*very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled
 
 ![InputHandler](Images/InputHandler.png?raw=true "InputHandler")
 
-InputManager.gd reads input, adds inner and outer deadzones and then scales to normalized value. Show the received and mapped input values using 'k'.
+InputManager.gd reads input, adds inner and outer deadzones (defined as JOYPAD_DEADZONE with a value of 0.2) and then scales to normalized value. Show the received and mapped input values using 'k'.
 
 **- Movement by forces vs velocity**
 
@@ -119,9 +144,7 @@ Bomb.gd
 
 **- Impulse**
 
-*Show your understanding of impulse with a force that happens over a short period of time rather
-than instant. E.g. an advanced jump cycle in which the character has a variable jump height
-depending on how long they press A, rather than a simple “add y velocity”.*
+*Show your understanding of impulse with a force that happens over a short period of time rather than instant. E.g. an advanced jump cycle in which the character has a variable jump height depending on how long they press A, rather than a simple “add y velocity”.*
 
 **- Orbit**
 
@@ -139,7 +162,7 @@ Orb.cs follows you according to GMm/r^2
 
 *Instead of using the built in “bounciness” you can make your own coefficient of restitution, where two objects collide and pass on velocity correctly. You can make bouncy balls and bowling balls e.g.*
 
-Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving object such as Player or other Bombs for itself and the collided object. If they collide with non-moving objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
+Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving object such as Player or other Bombs for itself and the collided object. If they collide with non-movable objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
 
 **- Reflection**
 
