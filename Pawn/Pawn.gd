@@ -16,7 +16,7 @@ onready var _drag := Vector2(Constants.MOVE_DRAG, 0)
 var collision_handled := false # flag to indicate that another object already handled the collision
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# this should stop the object from moving, which should stop colliding, which should stop endlessly adding gravity
 	# should actually happen if drag is working correctly
 	stop_at_rest()

@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 export var speed := 150.0
 export var mode := 0 # TODO enum hor, ver, diag, sin...
-export var distance := 300
+export var distance := 300.0
 
 var _start_pos = Vector2.ZERO
 var _dir := Vector2.ZERO

@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 
 			_draw_curve()
 
-			$CollisionShapeTop.rotation = angle + (PI if x < 0 else 0)
+			$CollisionShapeTop.rotation = angle + (PI if x < 0 else 0.0)
 
 			if _reset > delay:
 				# wait 0.5 seconds then fire more bombs
