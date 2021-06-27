@@ -5,17 +5,21 @@ onready var InputHandler = $InputHandler/Joypads
 onready var Alex = $Alex
 onready var GroundRay = $GroundRay
 
-export var mode_move := 3
+export var mode_move := 2
+export var mode_jump := 2
 
 var _debug := false
 var _is_on_ground := false
 var _timer := 0.0
 var _is_jumping := false
-var _jump_start := 0.0
+#var _jump_end := 0.0 # determine max jump time
+var _jump_start := 0.0 # determine max jump time
 
-const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping
+const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping "coyote time"
 const MOVE_ACCELERATION := Vector2(200, 300) # acceleration through move input
 const MAX_SPEED := Vector2(500, 2000) # max move speed
+const EXP := 0.02 # reducing part for jump height in exponential function
+const JUMP_TIME := 200 # time in which adding additional jump force is allowed
 
 func _process(delta: float) -> void:
 
@@ -31,13 +35,16 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("change_mode_move"):
 		mode_move = (mode_move + 1) % 5
 		print("mode move changed: ", mode_move)
+	if Input.is_action_just_pressed("change_mode_jump"):
+		mode_jump = (mode_jump + 1) % 3
+		print("mode jump changed: ", mode_jump)
 	
-	############	 	mode_move 1		 ############
+	############	 	mode_move 0		 ############
 	#################################################
 	# use vec2 * vec2 to combine move and jump
 	# 	- would always add jump -> add 0 in air
 	# 	- add modifier for move acceleration.y and gravity
-	if mode_move == 1:
+	if mode_move == 0:
 
 		dir.y = -1.0 if jump and _is_on_ground else 0.0
 
@@ -51,10 +58,10 @@ func _physics_process(delta: float) -> void:
 		# adapt to velocity from ground
 		_velocity.x = lerp(_velocity.x, ground_velocity.x, Constants.MOVE_DRAG)
 
-	############	 	mode_move 2		 ############
+	############	 	mode_move 1		 ############
 	#################################################
 	# its something, that doesn't feel shit :D
-	elif mode_move == 2:
+	elif mode_move == 1:
 
 		dir.y = -MOVE_ACCELERATION.y if jump and _is_on_ground else 1.0
 
@@ -65,13 +72,13 @@ func _physics_process(delta: float) -> void:
 		apply_gravity(delta)
 		if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * mass * delta))
 	
-	############	 	mode_move 3		 ############
+	############	 	mode_move 2		 ############
 	#################################################
 	# handle seperate for move and jump/gravity
 	# 	- implement using speed, acc and velocity
 	# 	- seperate handling for x and y
 	# 	- add modifier for move acceleration.y and gravity
-	elif mode_move == 3:
+	elif mode_move == 2:
 
 		if dir.x != 0:
 			_speed += MOVE_ACCELERATION.x * delta
@@ -95,10 +102,10 @@ func _physics_process(delta: float) -> void:
 			#else:
 			#	_velocity.y = 0
 
-	############	 	mode_move 4		 ############
+	############	 	mode_move 3		 ############
 	#################################################
 	# a fresh start
-	elif mode_move == 4:
+	elif mode_move == 3:
 
 		_velocity += dir * MOVE_ACCELERATION.x * delta * mass
 
@@ -192,19 +199,64 @@ func _physics_process(delta: float) -> void:
 func initial_jump() -> void:
 
 	var cur_ms = OS.get_ticks_msec()
-	if not _is_jumping:
-		print("burst jump")
-		_is_jumping = true
-		_jump_start = cur_ms
-		_velocity.y -= MOVE_ACCELERATION.y
-	else:
-		# TODO: gradially apply minor jump acceleration
-		if _jump_start < cur_ms + 200:
-			_velocity.y -= MOVE_ACCELERATION.y * get_physics_process_delta_time() * 10
-			print("TODO: minor jump for _jumpstart: ", _jump_start, " after: ", (cur_ms - _jump_start))
+	############	 	jump variant 0		 ############
+	# - first adding a burst jump force
+	# - additionally increasing for a short period of 
+	#	time if hold button
+	#####################################################
+	if mode_jump == 0:
+		if not _is_jumping:
+			print("burst jump")
+			_is_jumping = true
+			_jump_start = cur_ms
+			_velocity.y -= MOVE_ACCELERATION.y
 		else:
-			_is_jumping = false
-			print("ending jump after: ", (cur_ms - _jump_start))
+			if _jump_start < cur_ms + JUMP_TIME:
+				_velocity.y -= MOVE_ACCELERATION.y * get_physics_process_delta_time() * 10
+				print("TODO: minor jump for _jumpstart: ", _jump_start, " after: ", (cur_ms - _jump_start))
+			else:
+				_is_jumping = false
+				print("ending jump after: ", (cur_ms - _jump_start))
+
+	############	 	jump variant 1		 ############
+	# - adding impuls of decreasing exponential function
+	#####################################################
+	elif mode_jump == 1:
+		if not _is_jumping:
+			print("start jump")
+			_is_jumping = true
+			_jump_start = cur_ms
+		else:
+			if _jump_start > cur_ms + JUMP_TIME:
+				print("end jump at: ", cur_ms)
+				_is_jumping = false
+				return
+
+		#var val = exp(log(MOVE_ACCELERATION.y) - 1/max(EXP, 0.00000001) * (cur_ms - _jump_start) * get_physics_process_delta_time())
+		#var val = exp(log(MOVE_ACCELERATION.y) - 1.25 * (cur_ms - _jump_start) * get_physics_process_delta_time())
+		var val = exp(log(MOVE_ACCELERATION.y) - (cur_ms - _jump_start) * EXP)
+		print("jump adding value: ", val)
+		_velocity.y -= val
+
+	############	 	jump variant 2		 ############
+	# - adding impuls of decreasing cos wave
+	#####################################################
+	elif mode_jump == 2:
+		if not _is_jumping:
+			print("start jump")
+			_is_jumping = true
+			_jump_start = cur_ms
+		else:
+			if _jump_start > cur_ms + JUMP_TIME:
+				print("end jump at: ", cur_ms)
+				_is_jumping = false
+				return
+
+		#var val = cos(2*PI) * MOVE_ACCELERATION.y - 12.5 * (cur_ms - _jump_start) * get_physics_process_delta_time()
+		var val = max(0, cos(0) * MOVE_ACCELERATION.y - (cur_ms - _jump_start) * (3 - EXP))
+		print("jump adding value: ", val)
+		_velocity.y -= val
+
 
 func set_floor_velocity(collider:Object = null) -> void:
 	if collider and collider.has_method("get_ground_velocity"):
