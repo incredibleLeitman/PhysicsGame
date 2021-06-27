@@ -1,30 +1,29 @@
 extends Pawn
 
 
-onready var InputHandler = $InputHandler/Joypads
 onready var Alex = $Alex
 onready var GroundRay = $GroundRay
+onready var InputHandler = $InputHandler/Joypads
 
 export var mode_move := 2
 export var mode_jump := 2
 
+# print debug values
 var _debug := false
+var _debug_jump := false
+
 var _is_on_ground := false
 var _timer := 0.0
 var _is_jumping := false
-#var _jump_end := 0.0 # determine max jump time
 var _jump_start := 0.0 # determine max jump time
+var _jump_end := 0.0 # determine max jump time
 
 const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping "coyote time"
 const MOVE_ACCELERATION := Vector2(200, 300) # acceleration through move input
 const MAX_SPEED := Vector2(500, 2000) # max move speed
-const EXP := 0.02 # reducing part for jump height in exponential function
-const JUMP_TIME := 200 # time in which adding additional jump force is allowed
+const JUMP_DECAY := 0.4 # reducing part for jump functions
+const JUMP_TIME := 50 # time in ms for how long adding additional jump force is allowed
 
-func _process(delta: float) -> void:
-
-	if abs(_velocity.x) > 0:
-		Alex.flip_h = sign(_velocity.x) >= 0
 
 func _physics_process(delta: float) -> void:
 
@@ -97,7 +96,7 @@ func _physics_process(delta: float) -> void:
 			if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * mass * delta))
 		else:
 			if jump:
-				initial_jump()
+				perform_jump()
 			# TODO FIXME: should be handled by drag
 			#else:
 			#	_velocity.y = 0
@@ -111,7 +110,7 @@ func _physics_process(delta: float) -> void:
 
 		if _is_on_ground:
 			if jump:
-				initial_jump()
+				perform_jump()
 		else:
 			apply_gravity(delta)
 
@@ -193,69 +192,45 @@ func _physics_process(delta: float) -> void:
 	var rotator = $CollisionShape2D
 	rotator.rotation = lerp(rotator.rotation, asin(normal.dot(Vector2.RIGHT)), 0.1)
 
+	if abs(_velocity.x) > 0:
+		Alex.flip_h = sign(_velocity.x) >= 0
+
 	set_floor_velocity(collider) # set to Vector2.ZERO if null
 
 
-func initial_jump() -> void:
+func perform_jump() -> void:
 
 	var cur_ms = OS.get_ticks_msec()
-	############	 	jump variant 0		 ############
-	# - first adding a burst jump force
-	# - additionally increasing for a short period of 
-	#	time if hold button
-	#####################################################
+
+	if not _is_jumping:
+		if _debug_jump: print("\nmode: ", mode_jump, " jump start at: ", cur_ms)
+		_is_jumping = true
+		_jump_end = cur_ms + JUMP_TIME
+		#_jump_start = cur_ms
+	else:
+		#if cur_ms > _jump_start + JUMP_TIME:
+		if cur_ms > _jump_end:
+			if _debug_jump: print("end jump at: ", cur_ms)
+			_is_jumping = false
+			return
+
+	var diff = cur_ms - (_jump_end - JUMP_TIME)
+	#var diff = cur_ms - _jump_start
+	var val = 0
+	# jump variant 0 - linear damping
 	if mode_jump == 0:
-		if not _is_jumping:
-			print("burst jump")
-			_is_jumping = true
-			_jump_start = cur_ms
-			_velocity.y -= MOVE_ACCELERATION.y
-		else:
-			if _jump_start < cur_ms + JUMP_TIME:
-				_velocity.y -= MOVE_ACCELERATION.y * get_physics_process_delta_time() * 10
-				print("TODO: minor jump for _jumpstart: ", _jump_start, " after: ", (cur_ms - _jump_start))
-			else:
-				_is_jumping = false
-				print("ending jump after: ", (cur_ms - _jump_start))
+		val = (-diff * MOVE_ACCELERATION.y/JUMP_TIME + MOVE_ACCELERATION.y) * JUMP_DECAY
 
-	############	 	jump variant 1		 ############
-	# - adding impuls of decreasing exponential function
-	#####################################################
+	# jump variant 1 - adding impuls with exponential of log function
 	elif mode_jump == 1:
-		if not _is_jumping:
-			print("start jump")
-			_is_jumping = true
-			_jump_start = cur_ms
-		else:
-			if _jump_start > cur_ms + JUMP_TIME:
-				print("end jump at: ", cur_ms)
-				_is_jumping = false
-				return
+		val = exp(log(MOVE_ACCELERATION.y) - diff * 1/JUMP_DECAY)
 
-		#var val = exp(log(MOVE_ACCELERATION.y) - 1/max(EXP, 0.00000001) * (cur_ms - _jump_start) * get_physics_process_delta_time())
-		#var val = exp(log(MOVE_ACCELERATION.y) - 1.25 * (cur_ms - _jump_start) * get_physics_process_delta_time())
-		var val = exp(log(MOVE_ACCELERATION.y) - (cur_ms - _jump_start) * EXP)
-		print("jump adding value: ", val)
-		_velocity.y -= val
-
-	############	 	jump variant 2		 ############
-	# - adding impuls of decreasing cos wave
-	#####################################################
+	# jump variant 2 - adding impuls of cos wave
 	elif mode_jump == 2:
-		if not _is_jumping:
-			print("start jump")
-			_is_jumping = true
-			_jump_start = cur_ms
-		else:
-			if _jump_start > cur_ms + JUMP_TIME:
-				print("end jump at: ", cur_ms)
-				_is_jumping = false
-				return
+		val = cos(diff * PI/2 / JUMP_TIME) * MOVE_ACCELERATION.y * JUMP_DECAY
 
-		#var val = cos(2*PI) * MOVE_ACCELERATION.y - 12.5 * (cur_ms - _jump_start) * get_physics_process_delta_time()
-		var val = max(0, cos(0) * MOVE_ACCELERATION.y - (cur_ms - _jump_start) * (3 - EXP))
-		print("jump adding value: ", val)
-		_velocity.y -= val
+	if _debug_jump: print("jump adding value: ", val, " for diff: ", diff)
+	_velocity.y -= val
 
 
 func set_floor_velocity(collider:Object = null) -> void:
