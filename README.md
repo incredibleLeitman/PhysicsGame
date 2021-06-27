@@ -53,13 +53,13 @@ C. Your mark from the Euler group (10 points)
 
 **Standard group:**
 - [x] Normalisation and magnitude
-- [ ] Movement by forces vs velocity
+- [x] Movement by forces vs velocity
 - [x] Drag function (not unity default)
 - [x] Gravity function (not unity default)
 - [x] Collision Normals
 - [ ] Angular velocity
 - [x] Momentum
-- [ ] Impulse
+- [x] Impulse
 - [ ] Orbit
 - [ ] Friction + Mass
 - [x] Coefficient of restitution
@@ -76,7 +76,7 @@ C. Your mark from the Euler group (10 points)
 - [ ] Advanced slope physics
 
 **Euler group:**
-- [ ] Demonstrate understanding of euler integration
+- [x] Demonstrate understanding of euler integration
 
 
 <a name="overview" />
@@ -101,14 +101,14 @@ e*very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled
 
 InputManager.gd reads input, adds inner and outer deadzones (defined as JOYPAD_DEADZONE with a value of 0.2) and then scales to normalized value. Show the received and mapped input values using 'k'.
 
-**- Movement by forces vs velocity**
+**- Movement by forces vs velocity TBD**
 
-*When the L button is being held, make your character controller modify the velocity directly as a
-velocity and not an acceleration. When L is not being held, make your character controller move with
-a force, either with a velocity delta or by AddForce*
+*When the L button is being held, make your character controller modify the velocity directly as a  velocity and not an acceleration. When L is not being held, make your character controller move with  a force, either with a velocity delta or by AddForce*
 
-RadBoar.cs has a function called Move(), if you hold L2 it will move you by velocity, otherwise it
-moves you by force.
+RadBoar.cs has a function called Move(), if you hold L2 it will move you by velocity, otherwise it moves you by force.
+
+Implemented different movements for pawns: simple Enemy.gd just moves by setting the velocity in the opposite direction after colliding with an obstacle. Bomb.gd applies gravity and bounces off of walls and other obstacles and Player.gd hast different implemented methods for moving:
+0... TBD
 
 **- Drag function**
 
@@ -127,7 +127,7 @@ Pawn.gd contains a ``apply_gravity()`` function. Value can be changed using the 
 
 *When the character hits the floor, they should become grounded so they can jump again. Depending on the angle of what they hit, they should not become grounded. You can demonstrate this with walls or even sloped surfaces.*
 
-Player has a downward raycast attached to it which reads the normal of it in Player.gd. This value is used to determine, if the player is grounded and sets the rotation of the sprite to align the model with the surface.
+Player has a downward raycast attached to it which reads the normal of it in Player.gd. This value is used to determine, if the player is grounded and sets the rotation of the sprite to align the model with the surface. The effect can be seen in the level: for the higher slopes the player is not able to jump, because the angle does not count as grounded.
 
 **- Angular Velocity**
 
@@ -147,7 +147,11 @@ When a Bomb explodes it applies a force depending on it's mass and the distance 
 
 *Show your understanding of impulse with a force that happens over a short period of time rather than instant. E.g. an advanced jump cycle in which the character has a variable jump height depending on how long they press A, rather than a simple “add y velocity”.*
 
-TODO: jump and acceleration
+Player.gd has three different methods for jumping, that can be selected with key 'j' on keyboard:
+0... linear
+1... logarithmic
+2... cosine
+This allows higher jumping depending on how long the jump button is pressed.
 
 **- Orbit**
 
@@ -244,6 +248,8 @@ Companion.cs lerps your little companion towards you using its velocity
 | key        | action |
 | :------------- | :----- |
 | k      | toggle InputHandler visibility |
+| m      | change move mode |
+| j      | change jump modes: linear, exp, cos |
 
 Player can also be moved with a controller
 
