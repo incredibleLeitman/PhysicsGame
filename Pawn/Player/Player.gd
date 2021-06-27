@@ -14,8 +14,6 @@ var _debug_jump := false
 
 var _is_on_ground := false
 var _timer := 0.0
-var _is_jumping := false
-var _jump_start := 0.0 # determine max jump time
 var _jump_end := 0.0 # determine max jump time
 
 const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping "coyote time"
@@ -177,7 +175,7 @@ func _physics_process(delta: float) -> void:
 			print("on ground")
 			_timer = 0.0
 			_is_on_ground = true
-			_is_jumping = false
+			_jump_end = 0.0
 
 	# otherwise player is not necessarily in the air
 	# but forbidden to jump -> still set rotation
@@ -202,20 +200,16 @@ func perform_jump() -> void:
 
 	var cur_ms = OS.get_ticks_msec()
 
-	if not _is_jumping:
+	if _jump_end == 0.0:
 		if _debug_jump: print("\nmode: ", mode_jump, " jump start at: ", cur_ms)
-		_is_jumping = true
 		_jump_end = cur_ms + JUMP_TIME
-		#_jump_start = cur_ms
 	else:
-		#if cur_ms > _jump_start + JUMP_TIME:
 		if cur_ms > _jump_end:
 			if _debug_jump: print("end jump at: ", cur_ms)
-			_is_jumping = false
+			_jump_end = 0.0
 			return
 
 	var diff = cur_ms - (_jump_end - JUMP_TIME)
-	#var diff = cur_ms - _jump_start
 	var val = 0
 	# jump variant 0 - linear damping
 	if mode_jump == 0:
