@@ -8,6 +8,7 @@ export var mass := 1.0
 var _speed := 0.0
 var _velocity := Vector2.ZERO
 var _is_in_rest := false
+var _is_on_ground := false
 
 onready var ground_velocity := Vector2.ZERO # velocity for ground, platform, etc...
 onready var _gravity := Constants.GRAVITY
@@ -27,8 +28,10 @@ func get_ground_velocity() -> Vector2:
 func set_gravity(gravity : float) -> void:
 	_gravity = gravity
 
-func apply_gravity(delta: float) -> void:
-	_velocity += _gravity * mass * delta * Vector2.DOWN
+func apply_gravity() -> void:
+	# TODO FIXME: using own flag for jump to apply gravity in coyote time
+	if not _is_on_ground:
+		_velocity += _gravity * mass * get_physics_process_delta_time() * Vector2.DOWN
 
 func set_drag(drag : Vector2) -> void:
 	_drag = drag

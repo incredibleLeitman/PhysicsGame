@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 func _handle_movement(delta: float) -> void:
 
 	if not is_on_floor() and not _is_in_rest:
-		apply_gravity(delta)
+		apply_gravity()
 
 	# using move and collide to get collsion
 	var collision = move_and_collide(_velocity * delta)

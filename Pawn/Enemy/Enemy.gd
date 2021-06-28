@@ -10,7 +10,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 
 	if not is_on_floor():
-		apply_gravity(delta)
+		apply_gravity()
 
 	if is_on_wall():
 		_velocity.x *= -1

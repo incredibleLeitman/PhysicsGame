@@ -32,25 +32,24 @@ func _physics_process(delta: float) -> void:
 	if abs(pos.x - global_position.x) > 200 or abs(pos.y - global_position.y) > 400:
 
 		var x = pos.x - muzzle.global_position.x
-		var y = -pos.y - muzzle.global_position.y # TODO FIXME: this should be positive
-		
-#		var a = (g * x*x) / (2 * v2)
-#		var b = x
-#		var c = a + y
-#		
-#		var quotient = b*b - 4*a*c
+		var y = -pos.y - muzzle.global_position.y
+
+		#var a = (g * x*x) / (2 * v2)
+		#var b = x
+		#var c = a + y
 
 		# solve quadratic equation for theta
 		# shamelessly stolen from the great Alex Rose who used this in RudeBear
 		# "Physics for Unity - 22: SUVAT Equations and 3D Projectile Prediction"
 		# I tried to derive the formula myself but failed miserably -.-
 		var quotient = v2*v2 - g*g * x*x - 2 * v2*y*g
+		#var quotient = b*b - 4*a*c
 		if quotient > 0:
 
 			_reset += delta
 
 			var result = (v2 - sqrt(quotient)) / (g*x)
-#			var result = (-b - sqrt(quotient)) / (2*a)
+			#var result = (-b - sqrt(quotient)) / (2*a)
 			var angle = atan(result)
 
 			_velocity = Vector2(
