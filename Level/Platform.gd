@@ -11,7 +11,7 @@ func _ready() -> void:
 	_start_pos = position
 	if mode == 0:
 		_dir = Vector2(sign(distance), 0)
-		distance = distance / scale.x
+		distance = distance #/ scale.x
 	elif mode == 1:
 		_dir = Vector2(0, sign(distance))
 		distance = distance / scale.y
