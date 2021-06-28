@@ -28,14 +28,15 @@ func set_gravity(gravity : float) -> void:
 	_gravity = gravity
 
 func apply_gravity(delta: float) -> void:
-	_velocity.y += _gravity * mass * delta
+	_velocity += _gravity * mass * delta * Vector2.DOWN
 
 func set_drag(drag : Vector2) -> void:
 	_drag = drag
 
 func apply_drag():
-	_velocity.x = lerp(_velocity.x, ground_velocity.x, _drag.x)
-	_velocity.y = lerp(_velocity.y, ground_velocity.y, _drag.y)
+	#_velocity.x = lerp(_velocity.x, ground_velocity.x, _drag.x)
+	#_velocity.y = lerp(_velocity.y, ground_velocity.y, _drag.y)
+	_velocity += (ground_velocity - _velocity) * _drag * get_physics_process_delta_time()
 
 func add_force(force: Vector2) -> void:
 	_velocity += force

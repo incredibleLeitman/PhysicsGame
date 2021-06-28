@@ -8,13 +8,14 @@ onready var InputHandler = $InputHandler/Joypads
 export var mode_move := 2
 export var mode_jump := 2
 
+var _is_on_ground := false
+var _timer_ground := 0.0 # grace period timer for on_ground
+var _jump_end := 0.0 # determine max jump time
+
 # print debug values
 var _debug := false
 var _debug_jump := false
-
-var _is_on_ground := false
-var _timer := 0.0
-var _jump_end := 0.0 # determine max jump time
+var _debug_ground := false
 
 const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping "coyote time"
 const MOVE_ACCELERATION := Vector2(200, 300) # acceleration through move input
@@ -23,18 +24,20 @@ const JUMP_DECAY := 0.4 # reducing part for jump functions
 const JUMP_TIME := 50 # time in ms for how long adding additional jump force is allowed
 
 
-func _physics_process(delta: float) -> void:
-
-	# get move dir from InputHandler
-	var dir = InputHandler.get_move_dir()
-	var jump = InputHandler.is_jumping()
-	#if Input.is_key_pressed(KEY_M):
+func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("change_mode_move"):
 		mode_move = (mode_move + 1) % 5
 		print("mode move changed: ", mode_move)
 	if Input.is_action_just_pressed("change_mode_jump"):
 		mode_jump = (mode_jump + 1) % 3
 		print("mode jump changed: ", mode_jump)
+
+
+func _physics_process(delta: float) -> void:
+
+	# get move dir from InputHandler
+	var dir = InputHandler.get_move_dir()
+	var jump = InputHandler.is_jumping()
 	
 	############	 	mode_move 0		 ############
 	#################################################
@@ -92,12 +95,8 @@ func _physics_process(delta: float) -> void:
 		if not _is_on_ground:
 			apply_gravity(delta)
 			if _debug: print("velocity: ", _velocity, " after adding gravity: ", (Constants.GRAVITY * mass * delta))
-		else:
-			if jump:
-				perform_jump()
-			# TODO FIXME: should be handled by drag
-			#else:
-			#	_velocity.y = 0
+		elif jump:
+			perform_jump()
 
 	############	 	mode_move 3		 ############
 	#################################################
@@ -113,6 +112,16 @@ func _physics_process(delta: float) -> void:
 			apply_gravity(delta)
 
 		print("velocity: ", _velocity)
+
+	# TODO:
+	# apply move
+	# grav
+	# 	add_force(g * m * down)
+	# drag
+	#	vel += Vec2(
+	#		(ground_vel.x - vel.x) * dt * xDrag,
+	#		(ground_vel.y - vel.y) * dt * yDrag,
+	#	)
 
 	apply_drag()
 
@@ -169,34 +178,45 @@ func _physics_process(delta: float) -> void:
 			if debug_col: print("	raycast normal: ", normal)
 			collider = GroundRay.get_collider()
 
-	if normal.y < -0.85:
+	# set player grounded if has a bottom collider
+	# and collision normal is greater than 45 degrees
+	if normal.y < -0.78:
 
 		if not _is_on_ground:
-			print("on ground")
-			_timer = 0.0
+			if _debug_ground: print("on ground @", OS.get_ticks_msec())
+			_timer_ground = 0.0
 			_is_on_ground = true
 			_jump_end = 0.0
 
 	# otherwise player is not necessarily in the air
 	# but forbidden to jump -> still set rotation
 	elif _is_on_ground:
-		_timer += delta
-		if _timer > GRACE_PERIOD:
-			print("lost ground for timer: ", _timer)
+		_timer_ground += delta
+		if _timer_ground > GRACE_PERIOD:
+			if _debug_ground: print("lost ground @", OS.get_ticks_msec())
 			_is_on_ground = false
+
+	set_floor_velocity(collider) # set to Vector2.ZERO if null
 
 	# TODO FIXME: lerping rotation works better than setting instantly,
 	#			  -> maybe adding a timer to fully remove flickering?
 	var rotator = $CollisionShape2D
 	rotator.rotation = lerp(rotator.rotation, asin(normal.dot(Vector2.RIGHT)), 0.1)
 
+	# align sprite with movement direction
 	if abs(_velocity.x) > 0:
 		Alex.flip_h = sign(_velocity.x) >= 0
 
-	set_floor_velocity(collider) # set to Vector2.ZERO if null
+
+func perform_move() -> void:
+	pass
 
 
 func perform_jump() -> void:
+
+	# no jump if not grounded
+	if not _is_on_ground:
+		return
 
 	var cur_ms = OS.get_ticks_msec()
 
@@ -224,7 +244,7 @@ func perform_jump() -> void:
 		val = cos(diff * PI/2 / JUMP_TIME) * MOVE_ACCELERATION.y * JUMP_DECAY
 
 	if _debug_jump: print("jump adding value: ", val, " for diff: ", diff)
-	_velocity.y -= val
+	_velocity += val * Vector2.UP
 
 
 func set_floor_velocity(collider:Object = null) -> void:
