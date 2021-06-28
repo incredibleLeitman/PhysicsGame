@@ -5,7 +5,10 @@ onready var Alex = $Alex
 onready var GroundRay = $GroundRay
 onready var InputHandler = $InputHandler/Joypads
 
+enum MODE_MOVE { EULER, IEULER, EULERCROMER }
 export var mode_move := 2
+
+enum MODE_JUMP { LINEAR, LOG, COS }
 export var mode_jump := 2
 
 var _timer_ground := 0.0 # grace period timer for on_ground
@@ -17,7 +20,6 @@ var _debug_jump := false
 var _debug_ground := false
 
 const GRACE_PERIOD := 0.2 # extra time on ground to allow jumping "coyote time"
-#const MOVE_ACCELERATION := Vector2(200, 300) # acceleration through move input
 const MOVE_ACCELERATION := Vector2(500, 300) # acceleration through move input
 const MAX_SPEED := Vector2(500, 2000) # max move speed
 const JUMP_DECAY := 0.4 # reducing part for jump functions
@@ -36,7 +38,7 @@ func _process(_delta: float) -> void:
 func _physics_process(delta: float) -> void:
 
 	# Euler: displace then calculate velocity
-	if mode_move == 0:
+	if mode_move == MODE_MOVE.EULER:
 
 		_perform_move()
 		_calculate_move()
@@ -44,7 +46,7 @@ func _physics_process(delta: float) -> void:
 		apply_drag()
 
 	# Improved Euler: calculate acceleration and displace
-	elif mode_move == 1:
+	elif mode_move == MODE_MOVE.IEULER:
 
 		var u = _velocity
 
@@ -60,10 +62,10 @@ func _physics_process(delta: float) -> void:
 
 		_perform_move()
 
-		#_velocity = v
+		_velocity = v
 
 	# Euler-Cromer: calculate velocity then move
-	elif mode_move == 2:
+	elif mode_move == MODE_MOVE.EULERCROMER:
 
 		_calculate_move()
 		apply_gravity()
@@ -107,16 +109,17 @@ func _jump() -> void:
 
 	var diff = cur_ms - (_jump_end - JUMP_TIME)
 	var val = 0
+
 	# jump variant 0 - linear damping
-	if mode_jump == 0:
+	if mode_jump == MODE_JUMP.LINEAR:
 		val = (-diff * MOVE_ACCELERATION.y/JUMP_TIME + MOVE_ACCELERATION.y) * JUMP_DECAY
 
 	# jump variant 1 - adding impuls with exponential of log function
-	elif mode_jump == 1:
+	elif mode_jump == MODE_JUMP.LOG:
 		val = exp(log(MOVE_ACCELERATION.y) - diff * 1/JUMP_DECAY)
 
 	# jump variant 2 - adding impuls of cos wave
-	elif mode_jump == 2:
+	elif mode_jump == MODE_JUMP.COS:
 		val = cos(diff * PI/2 / JUMP_TIME) * MOVE_ACCELERATION.y * JUMP_DECAY
 
 	if _debug_jump: print("jump adding value: ", val, " for diff: ", diff)
