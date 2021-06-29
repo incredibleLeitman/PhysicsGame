@@ -33,6 +33,7 @@ limit_smoothed = true
 smoothing_enabled = true
 
 [node name="Dreamshield" parent="." instance=ExtResource( 5 )]
+visible = false
 position = Vector2( -4.23785, 6.88651 )
 
 [node name="GroundRay" type="RayCast2D" parent="."]
