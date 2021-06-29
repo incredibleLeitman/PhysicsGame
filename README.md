@@ -82,8 +82,6 @@ III. All forces between two objects exist in equal magnitude and opposite direct
 ``a = (v - u)/t``
 
 
-
-
 <a name="overview" />
 
 ## Overview and description
@@ -97,7 +95,10 @@ The demo level contains a "normal" Enemy on the left side, a few cannons that ca
 In between there are two platforms to demonstrate ground velocity integration and a "water" tunnel where gravity and drag values change if entered.
 It also provides different angled slopes to show that the player character is grounded depending on the normal to the floor.
 
-![Physics Game](Images/Physics Game.png?raw=true "Physics Game")
+Player Pawn can be controlled by A, D and Cursor keys to move, W and Cursor UP to jump and with connected controllers: left control stick to move, A (XBox) or X (PS) to jump.
+Controller inputs are mapped with respect to deadzones and can be shown using 'k' on keyboard.
+
+![PhysicsGame](Images/PhysicsGame.png?raw=true "Physics Game")
 
 I am really sorry that it looks so bad but I just have no feeling and hand for how to make things look more appealing ``¯\_(ツ)_/¯``
 
@@ -127,7 +128,9 @@ Your mark will be based on
 
 A. Your 7 additional highest marks from the standard or toughie groups excluding those in
 point B (70 points)
+
 B. Your 2 highest marks from the toughie group (20 points)
+
 C. Your mark from the Euler group (10 points)
 
 **Standard group:**
