@@ -35,6 +35,8 @@ func _physics_process(_delta: float) -> void:
 	if rect_position.y != _pos_to:
 		rect_position.y += ceil((_pos_to - rect_position.y) * 0.1)
 
+	# TODO: theoretically the full axis input vector should be mapped instead of each direction
+
 	# Loop through the axes and show their current values
 	for axis in range(4):
 		var node = axes.get_node("Axis" + str(axis) + "/ProgressBar")
@@ -51,6 +53,7 @@ func _physics_process(_delta: float) -> void:
 			# mapped
 			node = axes_mapped.get_node("Axis" + str(axis) + "/ProgressBar")
 			var axis_sign = sign(axis_value)
+			#axis_value = (abs(axis_value) - JOYPAD_INNER_DEADZONE) / (1 - JOYPAD_INNER_DEADZONE - JOYPAD_OUTER_DEADZONE)
 			axis_value = (abs(axis_value) - JOYPAD_DEADZONE) / (1 - 2*JOYPAD_DEADZONE)
 			axis_value = axis_sign * clamp(axis_value, 0, 1)
 			node.set_value(100 * axis_value)

@@ -305,3 +305,11 @@ and handling further movement if colliding such as slide or snap.
 - [Hyperphysics](http://hyperphysics.phy-astr.gsu.edu/hbase/hframe.html)
 
 - [official Godot Demo projects](https://godotengine.github.io/godot-demo-projects)
+
+- [Dynamic 2D Water in Unity](https://gamedevelopment.tutsplus.com/tutorials/creating-dynamic-2d-water-effects-in-unity--gamedev-14143)
+
+- [Buoyancy and water in Godot](https://notapixelstudio.wordpress.com/2018/03/11/adding-water-and-buoyancy-to-a-platform-game-with-godot-and-tiled/)
+
+- [a guide to 2D platformers](http://higherorderfun.com/blog/2012/05/20/the-guide-to-implementing-2d-platformers/)
+
+- [Math for Game Programmers](http://higherorderfun.com/blog/2012/06/03/math-for-game-programmers-05-vector-cheat-sheet/)
