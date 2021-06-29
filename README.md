@@ -24,7 +24,7 @@ Simple game prototype built in Godot to show some physic game engine basics for 
 - Acceleration a is the change of velocity over time
 - Speed s is change of position over time, acceleration * delta
 - Velocity v is dir * speed
-- Force F push or pull on an object thtat cause a mass to accelerate (gravity, magnetism, ...)
+- Force F push or pull on an object that cause a mass to accelerate (gravity, magnetism, ...)
 
  ``F = m*a = dp/dt``
 
@@ -55,7 +55,9 @@ Simple game prototype built in Godot to show some physic game engine basics for 
 ### Newtons laws
 
 I. An object at rest will stay at rest, and an object in motion will stay in motion unless acted on by a net external force
+
 II. The rate of change of momentum of a body over time is directly proportional to the force applied, and occurs in the same direction as the applied force.
+
 III. All forces between two objects exist in equal magnitude and opposite direction.
 
 ### SUVAT
@@ -167,36 +169,24 @@ C. Your mark from the Euler group (10 points)
 
 **- Normalisation and magnitude**
 
-*Read the controller input vector. For a 3D game, add a deadzone and change the magnitude so it uses the squared value of the
-reading instead of the raw value For a 2D platformer modify the value so that any x value from 0.9-1 will produce a value of 1 and
-e very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled correctly*
-
 ![InputHandler](Images/InputHandler.png?raw=true "InputHandler")
 
 InputManager.gd reads input, adds inner and outer deadzones (defined as JOYPAD_DEADZONE with a value of 0.2) and then scales to normalized value. Show the received and mapped input values using 'k'.
 
 **- Movement by forces vs velocity**
 
-*When the L button is being held, make your character controller modify the velocity directly as a velocity and not an acceleration. When L is not being held, make your character controller move with  a force, either with a velocity delta or by AddForce*
-
 I Implemented different movements for pawns: simple Enemy.gd just moves by setting the velocity in the opposite direction after colliding with an obstacle. Platform.gd moves depending on it's mode either horizontally or vertically by velocity. Bomb.gd applies gravity and bounces off of walls and other obstacles and Player.gd has different implemented methods for moving (see [Euler Group].
 In ``_calculate_move`` the movement speed is calculated depending on input strength and direction and added as force if current player velocity is below max speed.
 
 **- Drag function**
 
-*Write your own drag function which will take a factor that can e.g. change depending on the fluid the character is in. You can also write a more advanced function that will support your Galilean Relativity*
-
 Pawn.gd contains a ``apply_drag()`` function to lerp with the configured drag factor. Thus can be set using ``set_drag`` on Pawn and derived classes and is used if entering/exiting Water.
 
 **- Gravity function**
 
-*Write a gravity function with a uniform gravitational acceleration regardless of inertial mass. You could also change the gravitational field strength based on where the character is ontriggerenter to have a kind of moonwalk area.*
-
 Pawn.gd contains a ``apply_gravity()`` function. Value can be changed using the ``set_gravity`` function on Pawn and derived classes.
 
 **- Collision Normals**
-
-*When the character hits the floor, they should become grounded so they can jump again. Depending on the angle of what they hit, they should not become grounded. You can demonstrate this with walls or even sloped surfaces.*
 
 Player has a downward raycast attached to it which reads the normal of it in Player.gd ``_check_on_ground``. This value is used to determine, if the player is grounded and sets the rotation of the sprite to align the model with the surface. The effect can be seen in the level: for the higher slopes the player is not able to jump, because the angle does not count as grounded.
 
@@ -206,14 +196,10 @@ Player has a downward raycast attached to it which reads the normal of it in Pla
 
 **- Momentum**
 
-*When two objects collide they should*
-
 If a Bomb collides with another Bomb or Player, the momentum of both changes. Although both using a default mass of 1, their velocity is usually different.
 When a Bomb explodes it applies a force depending on it's mass and the distance to an object (the closer the more). In case the affected Object is also a Bomb, another explosion is triggered, summing the resulting forces. This means, if a Player stands beside multiple bombs when they explode, the combined force of all explosions it added.
 
 **- Impulse**
-
-*Show your understanding of impulse with a force that happens over a short period of time rather than instant. E.g. an advanced jump cycle in which the character has a variable jump height depending on how long they press A, rather than a simple “add y velocity”.*
 
 Player.gd has three different methods for an advanced jump cycle implemented in ``_jump``, that can be selected with key 'j' on keyboard:
 0... linear
@@ -233,13 +219,9 @@ Orb.cs follows you according to GMm/r^2
 
 **- Coefficient of Restitution**
 
-*Instead of using the built in “bounciness” you can make your own coefficient of restitution, where two objects collide and pass on velocity correctly. You can make bouncy balls and bowling balls e.g.*
-
 Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving Pawn such as Player or other Bombs for itself and the collided object. If they collide with non-movable objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
 
 **- Reflection**
-
-*A mirror puzzle which raycasts outwards from a laser, and if it hits anything on a mirror mask, will reflect. At this point it would take the angle of incidence, raycast towards the angle of reflection and once it hits a non reflective surface represent all the reflections with a LineRenderer*
 
 Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function when colliding with walls to adjust their given velocity, which would result in the reflected angle if there would be no drag or gravity applied.
 
@@ -257,8 +239,6 @@ Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function whe
 
 **- Galilean Relativity**
 
-*Working moving platforms in which your normal physics, gravity, drag apply from your typical frame of reference into your new frame and you correctly inherit the velocity of your parent with physics (not through trying to use parenting or moving by transform)*
-
 ``Plattform.gs`` moves (defined by it’s mode) at a constant velocity. If Player.gd touches the top surface (one way collision) the current platform velocity is set as ground_velocity with ``_set_floor_velocity`` which is used as target for the drag lerp. The ground which the player stands on is constantly monitored to determine velocity changes of the plattform as well as falling/jumping off.
 
 **- Centrifugal/Coriolis correction TBD**
@@ -270,8 +250,6 @@ Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function whe
 *Throw an object and have it spin towards the right direction depending on the view angle and where you project it*
 
 **- Projectile Motion**
-
-*A projectile launcher with a fixed velocity that can calculate the correct angle at which to project something in order to hit a target (or the character) Or e.g. a Deterministic parabolic arc simulator that will show where an object flies before it is fired*
 
 Cannon.gd tracks the position of the Player if in reachable range and outside a defined close range to calculate the angle and velocity of fired bombs to hit. The resulting velocity is drawn per line, simulating the Bomb movement.
 
@@ -302,8 +280,6 @@ I added a rope that you can swing on in Pendulum.cs. Not only does it swing with
 ### Euler
 
 **- Euler integration**
-
-*Moving something to a desired position via its VELOCITY without a rigidbody.position/move function. Any function that shows you really understand how Time.fixedDeltaTime works in the engine and how it ties into calculus.*
 
 Player.gd uses three different move semantics in ``_physics_process``: Euler, improved Euler and Euler-Cromer which can be changed using 'm' on the keyboard.
 The ``move_and_...`` functions are only moving the Node by the given velocity (and internally using fixed delta time) but additionally calculating collisions
