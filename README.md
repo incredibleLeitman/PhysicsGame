@@ -1,11 +1,13 @@
 # PhysicsGame
-Simple game prototype to show some physic game engine basics for @FHTechnikumWien
+
+Simple game prototype built in Godot to show some physic game engine basics for @FHTechnikumWien.
+
 
 ## Table of Contents
 
-- [Topics](#topics)
 - [Trivia](#trivia)
 - [Overview and description](#overview)
+- [Topics](#topics)
 	* [Standard Group](#standard-grp)
 	* [Toughie Group](#toughie-grp)
 	* [Euler Group](#euler-grp)
@@ -30,19 +32,96 @@ Simple game prototype to show some physic game engine basics for @FHTechnikumWie
 
 ``p = m*v``
 
+### Euler
+
+- Euler
+
+    ``s += v * dt``
+
+    ``v += a * dt``
+
+- Improved Euler (Heun)
+
+    ``s += dt * v * dt² * a/2``
+
+    ``v += a * dt``
+
+- Euler-Cromer
+
+    ``v += a * dt``
+
+    ``s += v * dt``
+
 ### Newtons laws
 
 I. An object at rest will stay at rest, and an object in motion will stay in motion unless acted on by a net external force
 II. The rate of change of momentum of a body over time is directly proportional to the force applied, and occurs in the same direction as the applied force.
 III. All forces between two objects exist in equal magnitude and opposite direction.
 
+### SUVAT
+
+|  |  |
+| :-: | :- |
+| **S** | displacement |
+| **U** | initial velocity (v - a * t) |
+| **V** | final velocity |
+| **A** | acceleration |
+| **T** | time |
+
+[1] ``v = u + a * t``
+
+[2] ``s = u * t + 0.5 * a * t²``
+
+[3] ``s = 0.5 * (u + v) * t	``
+
+[4] ``v² = u² + 2 * a * s``
+
+[5] ``s = v * t - 0.5 * a * t²``
+
+
+``a = (v - u)/t``
+
+
+
+
+<a name="overview" />
+
+## Overview and description
+
+In my project I just have thrown together demonstrations of the given concepts. I marked all the implemented topics from the three groups with a checkmark [x], 
+topics marked with **TBD** are currently not implemented and may appear in future versions.
+
+Because I haven't touched Unity in years, I used [Godot](https://godotengine.org/) for my project, but most implementation concepts work very similar. (``_process`` and ``_physics_process`` instead of ``Update`` and ``FixedUpdate``, positive y direction is down instead of up, etc...)
+
+The demo level contains a "normal" Enemy on the left side, a few cannons that can shoot bombs at the player if in range and a larger bomb with more impact on the right side.
+In between there are two platforms to demonstrate ground velocity integration and a "water" tunnel where gravity and drag values change if entered.
+It also provides different angled slopes to show that the player character is grounded depending on the normal to the floor.
+
+![Physics Game](Images/Physics Game.png?raw=true "Physics Game")
+
+I am really sorry that it looks so bad but I just have no feeling and hand for how to make things look more appealing ``¯\_(ツ)_/¯``
+
+
+<a name="control-anchor" />
+
+## Controls
+
+| key        | action |
+| :------------- | :----- |
+| k      | toggle InputHandler visibility |
+| m      | change move mode |
+| j      | change jump modes: linear, exp, cos |
+| WASD   | move character and jump|
+| Cursor | move character and jump|
+
+Player can also be moved with a controller
+
 
 <a name="topics" />
 
-## Topics (TBD)
+## Topics
 
-Your grade will be based on a Unity project you make. This can be a game, or a simulation that
-implements and demonstrates your understanding of these topics:
+Your grade will be based on a Unity project you make. This can be a game, or a simulation that implements and demonstrates your understanding of these topics:
 
 Your mark will be based on
 
@@ -57,33 +136,27 @@ C. Your mark from the Euler group (10 points)
 - [x] Drag function (not unity default)
 - [x] Gravity function (not unity default)
 - [x] Collision Normals
-- [ ] Angular velocity
+- [ ] Angular velocity TBD
 - [x] Momentum
 - [x] Impulse
-- [ ] Orbit
-- [ ] Friction + Mass
+- [ ] Orbit TBD
+- [ ] Friction + Mass TBD
 - [x] Coefficient of restitution
 - [x] Reflection
-- [ ] Potential/kinetic energy
+- [ ] Potential/kinetic energy TBD
 
 **Toughie group:**
-- [ ] Hooke's law/Damping: This can be a spring, an elevator, water, a rope
+- [ ] Hooke's law/Damping TBD
 - [x] Galilean relativity
-- [ ] Centrifugal/Coriolis correction
-- [ ] Cross products in physics (3D)
+- [ ] Centrifugal/Coriolis correction TBD
+- [ ] Cross products in physics (3D) TBD
 - [x] Projectile Motion
-- [ ] Pendulums
-- [ ] Advanced slope physics
+- [ ] Pendulums TBD
+- [ ] Advanced slope physics TBD
 
 **Euler group:**
 - [x] Demonstrate understanding of euler integration
 
-
-<a name="overview" />
-
-## Overview and description (TBD)
-
-My project is a time travelling 2d platformer called Rad Boar Rewind. These are my topics:
 
 <a name="standard-grp" />
 
@@ -91,29 +164,24 @@ My project is a time travelling 2d platformer called Rad Boar Rewind. These are 
 
 **- Normalisation and magnitude**
 
-*Read the controller input vector.
-For a 3D game, add a deadzone and change the magnitude so it uses the squared value of the
-reading instead of the raw value
-For a 2D platformer modify the value so that any x value from 0.9-1 will produce a value of 1 and
-e*very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled correctly
+*Read the controller input vector. For a 3D game, add a deadzone and change the magnitude so it uses the squared value of the
+reading instead of the raw value For a 2D platformer modify the value so that any x value from 0.9-1 will produce a value of 1 and
+e very other reading from the deadzone (say 0.1) to the max zone (0.9) is scaled correctly*
 
 ![InputHandler](Images/InputHandler.png?raw=true "InputHandler")
 
 InputManager.gd reads input, adds inner and outer deadzones (defined as JOYPAD_DEADZONE with a value of 0.2) and then scales to normalized value. Show the received and mapped input values using 'k'.
 
-**- Movement by forces vs velocity TBD**
+**- Movement by forces vs velocity**
 
-*When the L button is being held, make your character controller modify the velocity directly as a  velocity and not an acceleration. When L is not being held, make your character controller move with  a force, either with a velocity delta or by AddForce*
+*When the L button is being held, make your character controller modify the velocity directly as a velocity and not an acceleration. When L is not being held, make your character controller move with  a force, either with a velocity delta or by AddForce*
 
-RadBoar.cs has a function called Move(), if you hold L2 it will move you by velocity, otherwise it moves you by force.
-
-Implemented different movements for pawns: simple Enemy.gd just moves by setting the velocity in the opposite direction after colliding with an obstacle. Bomb.gd applies gravity and bounces off of walls and other obstacles and Player.gd hast different implemented methods for moving:
-0... TBD
+I Implemented different movements for pawns: simple Enemy.gd just moves by setting the velocity in the opposite direction after colliding with an obstacle. Platform.gd moves depending on it's mode either horizontally or vertically by velocity. Bomb.gd applies gravity and bounces off of walls and other obstacles and Player.gd has different implemented methods for moving (see [Euler Group].
+In ``_calculate_move`` the movement speed is calculated depending on input strength and direction and added as force if current player velocity is below max speed.
 
 **- Drag function**
 
-*Write your own drag function which will take a factor that can e.g. change depending on the fluid the
-character is in. You can also write a more advanced function that will support your Galilean Relativity*
+*Write your own drag function which will take a factor that can e.g. change depending on the fluid the character is in. You can also write a more advanced function that will support your Galilean Relativity*
 
 Pawn.gd contains a ``apply_drag()`` function to lerp with the configured drag factor. Thus can be set using ``set_drag`` on Pawn and derived classes and is used if entering/exiting Water.
 
@@ -127,9 +195,9 @@ Pawn.gd contains a ``apply_gravity()`` function. Value can be changed using the 
 
 *When the character hits the floor, they should become grounded so they can jump again. Depending on the angle of what they hit, they should not become grounded. You can demonstrate this with walls or even sloped surfaces.*
 
-Player has a downward raycast attached to it which reads the normal of it in Player.gd. This value is used to determine, if the player is grounded and sets the rotation of the sprite to align the model with the surface. The effect can be seen in the level: for the higher slopes the player is not able to jump, because the angle does not count as grounded.
+Player has a downward raycast attached to it which reads the normal of it in Player.gd ``_check_on_ground``. This value is used to determine, if the player is grounded and sets the rotation of the sprite to align the model with the surface. The effect can be seen in the level: for the higher slopes the player is not able to jump, because the angle does not count as grounded.
 
-**- Angular Velocity**
+**- Angular Velocity TBD**
 
 *A missile that comes towards you and rotates by angular velocity rather than by quaternion towards its forward. Easier in 2d!*
 
@@ -137,29 +205,26 @@ Player has a downward raycast attached to it which reads the normal of it in Pla
 
 *When two objects collide they should*
 
-Explosion.cs makes a bigger explosion with more particles depending on the mass and
-relativeVelocity of the two colliding objects
-
 If a Bomb collides with another Bomb or Player, the momentum of both changes. Although both using a default mass of 1, their velocity is usually different.
-When a Bomb explodes it applies a force depending on it's mass and the distance to an object (the more the nearer). In case the affected Object is also a Bomb, another explosion is triggered, summing the resulting forces. This means, if a Player stands beside multiple bombs when they explode, the combined force of all explosions it added.
+When a Bomb explodes it applies a force depending on it's mass and the distance to an object (the closer the more). In case the affected Object is also a Bomb, another explosion is triggered, summing the resulting forces. This means, if a Player stands beside multiple bombs when they explode, the combined force of all explosions it added.
 
 **- Impulse**
 
 *Show your understanding of impulse with a force that happens over a short period of time rather than instant. E.g. an advanced jump cycle in which the character has a variable jump height depending on how long they press A, rather than a simple “add y velocity”.*
 
-Player.gd has three different methods for jumping, that can be selected with key 'j' on keyboard:
+Player.gd has three different methods for an advanced jump cycle implemented in ``_jump``, that can be selected with key 'j' on keyboard:
 0... linear
 1... logarithmic
 2... cosine
 This allows higher jumping depending on how long the jump button is pressed.
 
-**- Orbit**
+**- Orbit TBD**
 
 *A sentry bot that orbits you following Newton’s Law of Gravitation would satisfy this in any kind of 2d game, or you could straight up do planets in space if you want to make a space game. It could even just be a set-piece you stumble upon.*
 
 Orb.cs follows you according to GMm/r^2
 
-**- Friction + Mass**
+**- Friction + Mass TBD**
 
 *Add some different slopes with different coefficients of friction (using your own function rather than Physics Materials). You could go the extra mile and do dynamic vs static friction or resolving slopes correctly*
 
@@ -175,16 +240,15 @@ Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide wi
 
 Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function when colliding with walls to adjust their given velocity, which would result in the reflected angle if there would be no drag or gravity applied.
 
-**- Potential/kinetic energy**
+**- Potential/kinetic energy TBD**
 
-*A simple harmonic oscillator that converts potential energy into kinetic energy and vice versa and displays their values. You could do a mass on a pulley e.g.
-I would personally not choose this topic because this is an analytical way of doing physics and not generally a simulation based one, and therefore it is rarely used in games. But since it’s on the syllabus, I will mark it if you try it.*
+*A simple harmonic oscillator that converts potential energy into kinetic energy and vice versa and displays their values. You could do a mass on a pulley e.g. I would personally not choose this topic because this is an analytical way of doing physics and not generally a simulation based one, and therefore it is rarely used in games. But since it’s on the syllabus, I will mark it if you try it.*
 
 <a name="toughie-grp" />
 
 ### Toughie
 
-**- Hooke’s Lap/Damping**
+**- Hooke’s Lap/Damping TBD**
 
 *A damped pair of scales. When you push one down, the other goes up, they wobble and then damp. A body of water represented by a line renderer, the surface splashes when you jump on it*
 
@@ -192,13 +256,13 @@ I would personally not choose this topic because this is an analytical way of do
 
 *Working moving platforms in which your normal physics, gravity, drag apply from your typical frame of reference into your new frame and you correctly inherit the velocity of your parent with physics (not through trying to use parenting or moving by transform)*
 
-``Plattform.gs`` moves (defined by it’s mode) at a constant velocity. If Player.gd touches the top surface (one way collision) the current platform velocity is set as ground_velocity which is used as target for the drag lerp. The ground which the player stands on is constantly monitored to determine velocity changes of the plattform as well as falling/jumping off.
+``Plattform.gs`` moves (defined by it’s mode) at a constant velocity. If Player.gd touches the top surface (one way collision) the current platform velocity is set as ground_velocity with ``_set_floor_velocity`` which is used as target for the drag lerp. The ground which the player stands on is constantly monitored to determine velocity changes of the plattform as well as falling/jumping off.
 
-**- Centrifugal/Coriolis correction**
+**- Centrifugal/Coriolis correction TBD**
 
 *When you’re standing on a rotating moving platform, your frame of reference is rotating. You canmake your character stay on a rotating platform correctly by simulating the Centrifugal force.Likewise if you simulate the Coriolis force they can walk along the middle without veering to one side. No need to do both, one is fine if this topic is selected.*
 
-**- Cross products in Physics (3D)**
+**- Cross products in Physics (3D) TBD**
 
 *Throw an object and have it spin towards the right direction depending on the view angle and where you project it*
 
@@ -208,26 +272,25 @@ I would personally not choose this topic because this is an analytical way of do
 
 Cannon.gd tracks the position of the Player if in reachable range and outside a defined close range to calculate the angle and velocity of fired bombs to hit. The resulting velocity is drawn per line, simulating the Bomb movement.
 
-Somehow this is a little offset: if the angle to hit the Player is < 45 ° the arc is to small, at exactly 45 ° it fits, > 45 ° it's larger than thge correct distance.
+Although the simulation and actual bomb movement are congruent, somehow there is a little offset for the tracking: if the angle to hit the Player is < 45 ° the arc is to small, at exactly 45 ° it fits and > 45 ° it's larger than thge correct distance.
 I have spend several hours trying to pin down the problem but was not able to fix it :/
 I manually derived the quadratic equation for theta on paper but ended up using the shown code from RudeBear because this gives the most accurate results.
 
 I believe this could be either a problem with scaling, although I double-checked all the objects and positions in the level and could'nt find something that doesn't look correct.
 Or maybe I just messed up applying the correct quadrant for the shooting direction.
 
-
 For this task I also added a "SUVAT.gd" node to provide an api for all the equations, but I ended up not using them in code.
 
 
-**- Pendulums**
+**- Pendulums TBD**
 
 *Pendulums that correctly oscillate with angular velocity showing a correct period depending on the length. Bonus if you go full gyro*
 
-**- Advanced slope physics**
+**- Advanced slope physics TBD**
 
 *Slope physics where, upon running up slopes of different heights, you will either manage to walk up (albeit slower) or you will slide down depending on the angle. Standing still on slopes and railings when no input is detected instead of sliding down.*
 
-**- Hooke’s Law AND Pendulum**
+**- Hooke’s Law AND Pendulum* TBD*
 
 I added a rope that you can swing on in Pendulum.cs. Not only does it swing with a period based on the length, but the rope itself is stretchy and oscillates when you jump on it, eventually reaching 0 due to damping!
 
@@ -239,19 +302,9 @@ I added a rope that you can swing on in Pendulum.cs. Not only does it swing with
 
 *Moving something to a desired position via its VELOCITY without a rigidbody.position/move function. Any function that shows you really understand how Time.fixedDeltaTime works in the engine and how it ties into calculus.*
 
-Companion.cs lerps your little companion towards you using its velocity
-
-<a name="control-anchor" />
-
-## Controls
-
-| key        | action |
-| :------------- | :----- |
-| k      | toggle InputHandler visibility |
-| m      | change move mode |
-| j      | change jump modes: linear, exp, cos |
-
-Player can also be moved with a controller
+Player.gd uses three different move semantics in ``_physics_process``: Euler, improved Euler and Euler-Cromer which can be changed using 'm' on the keyboard.
+The ``move_and_...`` functions are only moving the Node by the given velocity (and internally using fixed delta time) but additionally calculating collisions
+and handling further movement if colliding such as slide or snap.
 
 <a name="assets" />
 
@@ -261,7 +314,7 @@ Player can also be moved with a controller
 
 - "Boom" from one of my previous projects "Phaethon 3200"
 
-- diverse Super Mario assets found from the internet
+- diverse Super Mario assets found on the internet
 
 - Alex Rose head from his [Twitter Account](https://twitter.com/alexrosegames?lang=de)
 
@@ -274,13 +327,3 @@ Player can also be moved with a controller
 - [Hyperphysics](http://hyperphysics.phy-astr.gsu.edu/hbase/hframe.html)
 
 - [official Godot Demo projects](https://godotengine.github.io/godot-demo-projects)
-
-- [moving platforms with animation player](https://kidscancode.org/godot_recipes/2d/moving_platforms/)
-
-- https://godotengine.org/article/handling-axis-godot
-
-- https://www.reddit.com/r/godot/comments/bkbttb/how_to_access_the_deadzone_value_set_in_the_input/
-
-- https://godotengine.org/qa/10532/godot-joystick-axis-never-rests-at-0
-
-- https://docs.godotengine.org/de/stable/tutorials/3d/fps_tutorial/part_four.html
