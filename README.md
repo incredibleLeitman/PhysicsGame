@@ -175,7 +175,7 @@ InputManager.gd reads input, adds inner and outer deadzones (defined as JOYPAD_D
 
 **- Movement by forces vs velocity**
 
-I Implemented different movements for pawns: simple Enemy.gd just moves by setting the velocity in the opposite direction after colliding with an obstacle. Platform.gd moves depending on it's mode either horizontally or vertically by velocity. Bomb.gd applies gravity and bounces off of walls and other obstacles and Player.gd has different implemented methods for moving (see [Euler Group].
+I Implemented different movements for pawns: simple Enemy.gd just moves by setting the velocity in the opposite direction after colliding with an obstacle. Platform.gd moves depending on it's mode either horizontally or vertically by velocity. Bomb.gd applies gravity and bounces off of walls and other obstacles and Player.gd has different implemented methods for moving (see [Euler Group](#euler-grp)).
 In ``_calculate_move`` the movement speed is calculated depending on input strength and direction and added as force if current player velocity is below max speed.
 
 **- Drag function**
@@ -219,7 +219,7 @@ Orb.cs follows you according to GMm/r^2
 
 **- Coefficient of Restitution**
 
-Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving Pawn such as Player or other Bombs for itself and the collided object. If they collide with non-movable objects like walls, the instead use a ``bounce`` function to adjust their given velocity.
+Bomb.gd applies the ``collide`` function, defined in Pawn.gd, if they collide with another moving Pawn such as Player or other Bombs for itself and the collided object. If they collide with non-movable objects like walls, they instead use a ``bounce`` function to adjust their given velocity.
 
 **- Reflection**
 
@@ -233,7 +233,7 @@ Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function whe
 
 ### Toughie
 
-**- Hooke’s Lap/Damping TBD**
+**- Hooke’s Law/Damping TBD**
 
 *A damped pair of scales. When you push one down, the other goes up, they wobble and then damp. A body of water represented by a line renderer, the surface splashes when you jump on it*
 
@@ -251,17 +251,16 @@ Not sure if this counts as reflection, but Bomb.gd use a ``bounce`` function whe
 
 **- Projectile Motion**
 
-Cannon.gd tracks the position of the Player if in reachable range and outside a defined close range to calculate the angle and velocity of fired bombs to hit. The resulting velocity is drawn per line, simulating the Bomb movement.
+Cannon.gd tracks the position of the Player if in reachable range and outside a defined close range to calculate the angle and velocity of fired bombs to hit. The resulting velocity is drawn per line, simulating the bombs movement.
 
-Although the simulation and actual bomb movement are congruent, somehow there is a little offset for the tracking: if the angle to hit the Player is < 45 ° the arc is to small, at exactly 45 ° it fits and > 45 ° it's larger than thge correct distance.
-I have spend several hours trying to pin down the problem but was not able to fix it :/
+Although the simulation and actual bomb movement are congruent, somehow there is a little offset for the tracking: if the angle to hit the Player is < 45 ° the arc is to small, at exactly 45 ° it fits and > 45 ° it's larger than the correct distance.
+I have spent several hours trying to pin down the problem but was not able to fix it :/
 I manually derived the quadratic equation for theta on paper but ended up using the shown code from RudeBear because this gives the most accurate results.
 
-I believe this could be either a problem with scaling, although I double-checked all the objects and positions in the level and could'nt find something that doesn't look correct.
+I believe this could be either a problem with scaling, although I double-checked all the objects and positions in the level and couldn't find something that doesn't look correct.
 Or maybe I just messed up applying the correct quadrant for the shooting direction.
 
-For this task I also added a "SUVAT.gd" node to provide an api for all the equations, but I ended up not using them in code.
-
+For this task I also added a SUVAT.gd node to provide an api for all the equations, but I ended up not using them in code.
 
 **- Pendulums TBD**
 
